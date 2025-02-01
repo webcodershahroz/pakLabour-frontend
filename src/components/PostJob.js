@@ -97,14 +97,27 @@ function PostJob() {
     if (
       jobData.title.length > 0 &&
       jobData.description.length > 0 &&
-      jobData.price.length > 0 &&
-      jobData.searchTags.length > 0
-    )
-      await postJob();
+      jobData.searchTags.length > 0 
+      
+    ){
+      if(jobData.price.length > 3)
+        await postJob();
+      else{
+        setAlertData({
+          title: "Price Limit",
+          message: "Price must be greater than or equal to 1000",
+          type: "warning",
+        });
+        setIsAlertVisible(true);
+        hideAlert();
+      }
+      }
+      
+    
     else {
       setAlertData({
         title: "Empty Fields",
-        message: "Please fill all the fields",
+        message: "Please fill all the fields ",
         type: "warning",
       });
       setIsAlertVisible(true);
@@ -139,7 +152,7 @@ function PostJob() {
               </label>
               <div className="mt-2">
                 <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-brandcolor">
-                  <input
+                  <input  maxlength="50"
                     onChange={handleTextInputChange}
                     type="text"
                     name="title"
@@ -159,7 +172,7 @@ function PostJob() {
                 Description
               </label>
               <div className="mt-2">
-                <textarea
+                <textarea maxLength="300"
                   onChange={handleTextInputChange}
                   name="description"
                   id="description"
@@ -185,7 +198,7 @@ function PostJob() {
                     name="price"
                     id="price"
                     className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
-                    placeholder="Price"
+                    placeholder="Price : Rs 1000"
                   />
                 </div>
               </div>
@@ -201,7 +214,7 @@ function PostJob() {
                 <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-brandcolor">
                   <input
                     onChange={handleTextInputChange}
-                    placeholder="tag1,tag2,tag3 tag3,tag4"
+                    placeholder="Tag1,Tag2,Tag3 Tag3,Tag4"
                     type="text"
                     name="searchTags"
                     id="searchTags"

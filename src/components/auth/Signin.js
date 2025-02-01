@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate, useNavigation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Alert from "../utils/Alert";
 
 function Signin() {
@@ -160,28 +160,10 @@ function Signin() {
                   </div>
                   <Link
                     to={"/auth/forget-password"}
-                    className="float-right my-1 clear-both text-sm underline text-blue-600"
+                    className="float-right my-1 clear-both text-sm underline text-blue-600 my-3"
                   >
                     Forget Password?
                   </Link>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-start">
-                    <div className="flex items-center h-5">
-                      <input
-                        id="remember"
-                        aria-describedby="remember"
-                        type="checkbox"
-                        className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
-                        required=""
-                      />
-                    </div>
-                    <div className="ml-3 text-sm">
-                      <label htmlFor="remember" className="">
-                        Remember me
-                      </label>
-                    </div>
-                  </div>
                 </div>
                 <button
                   onClick={() => {
@@ -216,3 +198,24 @@ function Signin() {
 }
 
 export default Signin;
+
+
+
+// <div className="flex items-center justify-between">
+//                   <div className="flex items-start">
+//                     <div className="flex items-center h-5">
+//                       <input
+//                         id="remember"
+//                         aria-describedby="remember"
+//                         type="checkbox"
+//                         className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+//                         required=""
+//                       />
+//                     </div>
+//                     <div className="ml-3 text-sm">
+//                       <label htmlFor="remember" className="">
+//                         Remember me
+//                       </label>
+//                     </div>
+//                   </div>
+//                 </div>

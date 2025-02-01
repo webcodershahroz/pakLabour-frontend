@@ -6,7 +6,6 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Link,
   Navigate,
 } from "react-router-dom";
 import SearchResults from "./components/SearchResults";
@@ -46,11 +45,11 @@ function App() {
         <Routes>
         {/* Other routes */}
         <Route path="/workers/:userId" element={<WorkersDetail />}></Route>
-          <Route path="/job/:jobName/:jobId" element={<JobsDetail />}></Route>
+          <Route path="/job" element={<JobsDetail />}></Route>
           <Route path="/jobs" element={<Jobs />}></Route>
           <Route path="/workers" element={<Workers />}></Route>
           <Route
-            path="/search/:type/:query"
+            path="/search"
             element={<SearchResults />}
           ></Route>
 

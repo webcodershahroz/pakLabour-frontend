@@ -1,6 +1,7 @@
 import React, { createContext, useState } from "react";
 
 import { jwtDecode } from "jwt-decode";
+import { useLocation } from "react-router-dom";
 export const StateContext = createContext();
 
 export function StateContextProvider({ children }) {
@@ -9,7 +10,7 @@ export function StateContextProvider({ children }) {
   const [isAlertVisible, setIsAlertVisible] = useState(false);
   const [otp, setOtp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
+  // const location = useLocation();
 
   //alert states
   const [alertData, setAlertData] = useState({
@@ -28,8 +29,10 @@ export function StateContextProvider({ children }) {
   //decode jwt token from localstorage
   const decodeJwtToken = () => {
     const token = localStorage.getItem("token");
-    const data = jwtDecode(token);
-    return data.user;
+    if (token !== null) {
+      const data = jwtDecode(token);
+      return data.user;
+    }
   };
 
   //function to generate otp
@@ -45,7 +48,7 @@ export function StateContextProvider({ children }) {
 
   //send email of otp to email
   const sendEmail = async (email) => {
-    setIsLoading(true)
+    setIsLoading(true);
     let generatedOtp = generateOtp();
     const payload = {
       otp: generatedOtp,
@@ -91,7 +94,7 @@ export function StateContextProvider({ children }) {
           setIsAlertVisible(true);
           hideAlert();
         }
-        setIsLoading(false)
+        setIsLoading(false);
       })
       .catch((err) => {
         setAlertData({
@@ -102,11 +105,15 @@ export function StateContextProvider({ children }) {
 
         setIsAlertVisible(true);
         hideAlert();
-        setIsLoading(false)
+        setIsLoading(false);
       });
-
   };
 
+  //logout funtion
+  const logout = () => {
+    localStorage.removeItem('token');
+    window.location.reload()
+  };
   return (
     <StateContext.Provider
       value={{
@@ -121,7 +128,10 @@ export function StateContextProvider({ children }) {
         hideAlert,
         decodeJwtToken,
         sendEmail,
-      generateOtp,isLoading,otp
+        generateOtp,
+        isLoading,
+        otp,
+        logout,
       }}
     >
       {children}

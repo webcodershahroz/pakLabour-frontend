@@ -83,7 +83,12 @@ function MyJobs() {
   };
   //handle click on job listed in table
   const handleOnJobClick = (job) => {
-    navigate(`/job/${job.title}/${job._id}`);
+    const params = new URLSearchParams();
+    params.append('title',job.title);
+    params.append('type','job-details');
+    params.append('id',job._id);
+
+    navigate(`/job?${params.toString()}`);
   };
 
   useEffect(() => {
@@ -176,7 +181,7 @@ function MyJobs() {
             </div>
 
             {myJobs.length === 0 && (
-              <div className="w-full text-center">
+              <div className="w-full text-center mt-4">
                 <p className="text-3xl">You don't have any posted job</p>
               </div>
             )}

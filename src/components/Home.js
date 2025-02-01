@@ -1,8 +1,10 @@
 import React, { useContext, useEffect } from "react";
 import { StateContext } from "../context/StateContext";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 function Home() {
   const { searchQuery, setSearchQuery } = useContext(StateContext);
+  const navigate = useNavigate();
+
   return (
     <div className="h-[70vh] mb-14">
       <div
@@ -21,12 +23,19 @@ function Home() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <Link
-            to={`/search/jobs/${searchQuery}`}
+          <button
+            onClick={() => {
+              //handle search button click
+              const params = new URLSearchParams();
+              params.append("type", 'jobs');
+              params.append("query", searchQuery);
+
+              navigate(`/search?${params.toString()}`);
+            }}
             className={`absolute right-0 top-0 bottom-0 px-3 bg-black text-white h-full rounded-r font-bold flex items-center justify-center ${searchQuery.length===0?'pointer-events-none':''}`}
           >
             Search
-          </Link>
+          </button>
         </div>
       </div>
     </div>

@@ -1,29 +1,36 @@
 import React, { useContext, useEffect, useState } from "react";
 import { StateContext } from "../../context/StateContext";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
 function Navbar() {
-  const { searchQuery, setSearchQuery } = useContext(StateContext);
+  const { searchQuery, setSearchQuery, logout } = useContext(StateContext);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const navigate = useNavigate();
   const [userDetails, setUserDetails] = useState({
     name: "",
     email: "",
     type: "",
   });
   const location = useLocation();
+
   //function that chect if user is logged in or not
   const isUserLoggedIn = () => {
     let isLoggedIn = localStorage.getItem("token");
     return isLoggedIn === null ? false : true;
   };
+
   //decode jwt token from localstorage
   const decodeJwtToken = () => {
     const token = localStorage.getItem("token");
     const data = jwtDecode(token);
     return data.user;
   };
+
   useEffect(() => {
-    setUserDetails(decodeJwtToken());
+    if (isUserLoggedIn()) {
+      setUserDetails(decodeJwtToken());
+    }
   }, []);
 
   return (
@@ -67,14 +74,22 @@ function Navbar() {
                 setSearchQuery(e.target.value);
               }}
             />
-            <Link
+            <button
               to={`/search/jobs/${searchQuery}`}
+              onClick={() => {
+                //handle search button click
+                const params = new URLSearchParams();
+                params.append("type", 'jobs');
+                params.append("query", searchQuery);
+
+                navigate(`/search?${params.toString()}`);
+              }}
               className={`absolute right-0 top-0 bottom-0 px-3 bg-black text-white h-full rounded-r flex items-center justify-center ${
                 searchQuery.length === 0 ? "pointer-events-none" : ""
               }`}
             >
               Search
-            </Link>
+            </button>
           </div>
 
           <div className="flex items-center px-5 justify-between">
@@ -86,13 +101,34 @@ function Navbar() {
                     style={{ color: "gray" }}
                   ></i>
                 </Link>
-                <button className="h-[48px] w-[48px] border-2 border-gray-200 rounded-full">
-                  <img
-                    className="rounded-full p-1"
-                    src={require("../../img/profile-photo.jpg")}
-                    alt=""
-                  />
-                </button>
+                <div>
+                  <button
+                    onClick={() => setShowProfileMenu((prev) => !prev)}
+                    className="h-[48px] w-[48px] border-2 border-gray-200 rounded-full"
+                  >
+                    <img
+                      className="rounded-full p-1"
+                      src={require("../../img/profile-photo.jpg")}
+                      alt="P"
+                    />
+                  </button>
+                  <ul
+                    role="menu"
+                    hidden={!showProfileMenu}
+                    class="absolute z-10 min-w-[180px] overflow-auto rounded-lg border border-slate-200 bg-white p-1.5 shadow-lg shadow-sm focus:outline-none right-6"
+                  >
+                    <li
+                      onClick={() => {
+                        logout();
+                      }}
+                      role="menuitem"
+                      class="cursor-pointer text-slate-800 text-sm flex w-full items-center rounded-md p-3 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 text-red-500"
+                    >
+                      <i class="fa fa-sign-out" aria-hidden="true"></i>
+                      <p className="ml-2">Logout</p>
+                    </li>
+                  </ul>
+                </div>
               </>
             ) : (
               <>
