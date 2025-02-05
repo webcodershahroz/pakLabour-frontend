@@ -29,7 +29,9 @@ function Navbar() {
 
   useEffect(() => {
     if (isUserLoggedIn()) {
+    
       setUserDetails(decodeJwtToken());
+      
     }
   }, []);
 
@@ -119,13 +121,25 @@ function Navbar() {
                   >
                     <li
                       onClick={() => {
+                        const params = new URLSearchParams();
+                        params.append('type','account')
+                        navigate(`/settings?${params.toString()}`)
+                      }}
+                      role="menuitem"
+                      class="cursor-pointer text-slate-800 text-sm flex w-full items-center rounded-md p-3 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 text-red-500"
+                    >
+                      <i class="fa fa-user" aria-hidden="true"></i>
+                      <p className="ml-2">Profile</p>
+                    </li>
+                    <li
+                      onClick={() => {
                         logout();
                       }}
                       role="menuitem"
                       class="cursor-pointer text-slate-800 text-sm flex w-full items-center rounded-md p-3 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 text-red-500"
                     >
                       <i class="fa fa-sign-out" aria-hidden="true"></i>
-                      <p className="ml-2">Logout</p>
+                      <p className="ml-2 text-red-600">Logout</p>
                     </li>
                   </ul>
                 </div>

@@ -22,6 +22,7 @@ import Message from "./components/messages/Message";
 import PostJob from "./components/PostJob";
 import MyJobs from "../src/components/MyJobs";
 import ResetPassword from "./components/resetPassword/ResetPassword";
+import Settings from "./components/settingsScreen/Settings";
 
 //function that chect if user is logged in or not
 const isUserLoggedIn = () => {
@@ -136,6 +137,15 @@ function App() {
             element={
               <PrivateRoutes>
                 <MyJobs />
+              </PrivateRoutes>
+            }
+          />
+
+          <Route
+            path="/settings"
+            element={
+              <PrivateRoutes>
+                <Settings />
               </PrivateRoutes>
             }
           />

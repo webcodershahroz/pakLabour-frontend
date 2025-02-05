@@ -83,7 +83,7 @@ function JobsDetail() {
                 Apply now
               </button>
             </div>
-            <aside className="border w-full md:w-1/4 p-3">
+            <aside className="h-fit border p-3 m-3">
               <h2 className="font-bold">About the client:</h2>
               <div class="flex mb-4 gap-2 flex-col">
                 <div className="flex items-center">

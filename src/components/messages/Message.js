@@ -204,7 +204,7 @@ function Message() {
                 placeholder="Type a message..."
                 class="w-full p-2 rounded-md border border-gray-400 focus:outline-none focus:border-brandcolor"
               />
-              <button class="bg-brandcolor text-black px-4 py-2 rounded-md ml-2">
+              <button class="bg-black text-white font-bold px-4 py-2 rounded-md ml-2">
                 Send
               </button>
             </div>

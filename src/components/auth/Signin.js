@@ -49,7 +49,8 @@ function Signin() {
           try {
             const data = await res.json();
             localStorage.setItem("token", JSON.stringify(data));
-            navigate("/dashboard");
+            // navigate("/dashboard");
+            window.location.href = '/dashboard'
           } catch (error) {
             console.log("Local storage " + error.message);
           }
