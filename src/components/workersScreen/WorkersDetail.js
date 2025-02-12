@@ -1,6 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 function WorkersDetail() {
+  const navigate = useNavigate();
+  const [userDetails, setUserDetails] = useState({
+    name: "",
+    email: "",
+    type: "",
+  });
+  //decode jwt token from localstorage
+  const decodeJwtToken = () => {
+    const token = localStorage.getItem("token");
+    const data = jwtDecode(token);
+    return data.user;
+  };
+
+  //function that chect if user is logged in or not
+  const isUserLoggedIn = () => {
+    let isLoggedIn = localStorage.getItem("token");
+    return isLoggedIn === null ? false : true;
+  };
+
+  useEffect(() => {
+    if (isUserLoggedIn()) {
+      setUserDetails(decodeJwtToken());
+    }
+  }, []);
   return (
     <>
       <div>
@@ -53,16 +79,20 @@ function WorkersDetail() {
                 cancellation with these wireless headphones. Perfect for music
                 lovers and frequent travelers.
               </p>
-              <button
-                type="button"
-                class="text-white bg-black  font-medium rounded-lg px-5 py-2.5 me-2"
-              >
-                Hire now
-              </button>
+              {isUserLoggedIn() && userDetails.type === "postWork" ? (
+                <button
+                  onClick={()=>navigate('/hire-worker')}
+                  type="button"
+                  class="text-white bg-black  font-medium rounded-lg px-5 py-2.5 me-2"
+                >
+                  Hire now
+                </button>
+              ) : (
+                <p><span className="font-bold">Note:</span> Only post work profiles can hire workers</p>
+              )}
             </div>
           </div>
 
-          
           <div class="w-full max-w-7xl px-4 md:px-5 lg:px-5 mx-auto">
             <div class="w-full flex-col justify-start items-start lg:gap-10 gap-3 inline-flex">
               <h2 class="text-gray-900 text-3xl font-bold font-manrope leading-normal">

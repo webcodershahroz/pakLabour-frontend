@@ -23,6 +23,8 @@ import PostJob from "./components/PostJob";
 import MyJobs from "../src/components/MyJobs";
 import ResetPassword from "./components/resetPassword/ResetPassword";
 import Settings from "./components/settingsScreen/Settings";
+import HireNowScreen from "./components/HireNowScreen";
+import ApplyNowScreen from "./components/ApplyNowScreen";
 
 //function that chect if user is logged in or not
 const isUserLoggedIn = () => {
@@ -44,17 +46,14 @@ function App() {
       <Router>
         <Navbar />
         <Routes>
-        {/* Other routes */}
-        <Route path="/workers/:userId" element={<WorkersDetail />}></Route>
+          {/* Other routes */}
+          <Route path="/workers/:userId" element={<WorkersDetail />}></Route>
           <Route path="/job" element={<JobsDetail />}></Route>
           <Route path="/jobs" element={<Jobs />}></Route>
           <Route path="/workers" element={<Workers />}></Route>
-          <Route
-            path="/search"
-            element={<SearchResults />}
-          ></Route>
+          <Route path="/search" element={<SearchResults />}></Route>
 
-        {/* Public routes */}
+          {/* Public routes */}
           <Route
             path="/auth/signin"
             element={
@@ -103,7 +102,7 @@ function App() {
               </PublicRoutes>
             }
           ></Route>
-         
+
           {/* Protected Routes */}
           <Route
             path="/dashboard"
@@ -149,6 +148,24 @@ function App() {
               </PrivateRoutes>
             }
           />
+
+          <Route
+            path="/hire-worker"
+            element={
+              <PrivateRoutes>
+                <HireNowScreen />
+              </PrivateRoutes>
+            }
+          ></Route>
+
+          <Route
+            path="/apply-now"
+            element={
+              <PrivateRoutes>
+                <ApplyNowScreen />
+              </PrivateRoutes>
+            }
+          ></Route>
         </Routes>
         <Footer />
       </Router>

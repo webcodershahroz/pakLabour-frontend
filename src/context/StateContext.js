@@ -35,6 +35,12 @@ export function StateContextProvider({ children }) {
     }
   };
 
+  //function that chect if user is logged in or not
+  const isUserLoggedIn = () => {
+    let isLoggedIn = localStorage.getItem("token");
+    return isLoggedIn === null ? false : true;
+  };
+
   //function to generate otp
   const generateOtp = () => {
     let tempOtp = "";
@@ -111,8 +117,8 @@ export function StateContextProvider({ children }) {
 
   //logout funtion
   const logout = () => {
-    localStorage.removeItem('token');
-    window.location.reload()
+    localStorage.removeItem("token");
+    window.location.reload();
   };
   return (
     <StateContext.Provider
@@ -132,6 +138,7 @@ export function StateContextProvider({ children }) {
         isLoading,
         otp,
         logout,
+        isUserLoggedIn,
       }}
     >
       {children}

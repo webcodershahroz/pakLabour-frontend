@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import JobBids from "./JobBids";
+import { StateContext } from "../../context/StateContext";
 
 function JobsDetail() {
   const [searchParams] = useSearchParams();
@@ -8,6 +9,13 @@ function JobsDetail() {
   const id = searchParams.get("id");
   const type = searchParams.get("type");
   const navigate = useNavigate();
+  const { isUserLoggedIn, decodeJwtToken } = useContext(StateContext);
+   const [userDetails, setUserDetails] = useState({
+      name: "",
+      email: "",
+      type: "",
+    });
+  
 
   const handleClickOnJobOrWorker = (type) => {
     //handle search button click
@@ -18,6 +26,12 @@ function JobsDetail() {
 
     navigate(`/job?${params.toString()}`);
   };
+
+   useEffect(() => {
+      if (isUserLoggedIn()) {
+        setUserDetails(decodeJwtToken());
+      }
+    }, []);
 
   return (
     <>
@@ -76,12 +90,23 @@ function JobsDetail() {
                 <h2 className="font-bold text-gray-600">Price:</h2>
                 <p class="text-gray-700 text-justify">PKR 20000</p>
               </div>
-              <button
-                type="button"
-                class="text-white bg-black  font-medium rounded-lg px-5 py-2.5 me-2"
-              >
-                Apply now
-              </button>
+              {isUserLoggedIn() && userDetails.type === "worker" ? (
+                <button
+                  onClick={()=>{
+                    const params = new URLSearchParams()
+                    params.append("title","Job title")
+                    params.append("id","4935kafjl2hda23")
+
+                    navigate(`/apply-now?${params.toString()}`)
+                  }}
+                  type="button"
+                  class="text-white bg-black  font-medium rounded-lg px-5 py-2.5 me-2"
+                >
+                  Apply now
+                </button>
+              ) : (
+                <p><span className="font-bold">Note:</span> Only workers can apply for job</p>
+              )}
             </div>
             <aside className="h-fit border p-3 m-3">
               <h2 className="font-bold">About the client:</h2>
