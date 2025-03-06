@@ -50,7 +50,7 @@ function Jobs(props) {
 
                       navigate(`/job?${params.toString()}`);
                     }}
-                    className="flex flex-col gap-3 p-5 hover:bg-stone-100 cursor-pointer rounded border border-stone-400 xl:w-[49%]"
+                    className="flex flex-col gap-3 p-5 hover:bg-stone-100 cursor-pointer rounded border border-stone-400 xl:w-[49%] text-left"
                   >
                     <p className="text-sm text-gray-600">
                       Posted on {job.createdAt.slice(0, 10)}
