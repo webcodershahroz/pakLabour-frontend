@@ -25,6 +25,8 @@ import ResetPassword from "./components/resetPassword/ResetPassword";
 import Settings from "./components/settingsScreen/Settings";
 import HireNowScreen from "./components/HireNowScreen";
 import ApplyNowScreen from "./components/ApplyNowScreen";
+import CreateWorkerProfile from "./components/workersScreen/CreateWorkerProfile";
+import MyProfile from "./components/MyProfile";
 
 //function that chect if user is logged in or not
 const isUserLoggedIn = () => {
@@ -47,7 +49,7 @@ function App() {
         <Navbar />
         <Routes>
           {/* Other routes */}
-          <Route path="/workers/:userId" element={<WorkersDetail />}></Route>
+          <Route path="/worker" element={<WorkersDetail />}></Route>
           <Route path="/job" element={<JobsDetail />}></Route>
           <Route path="/jobs" element={<Jobs />}></Route>
           <Route path="/workers" element={<Workers />}></Route>
@@ -141,6 +143,15 @@ function App() {
           />
 
           <Route
+            path="/my-profile"
+            element={
+              <PrivateRoutes>
+                <MyProfile />
+              </PrivateRoutes>
+            }
+          />
+
+          <Route
             path="/settings"
             element={
               <PrivateRoutes>
@@ -163,6 +174,15 @@ function App() {
             element={
               <PrivateRoutes>
                 <ApplyNowScreen />
+              </PrivateRoutes>
+            }
+          ></Route>
+
+          <Route
+            path="/create-worker-profile"
+            element={
+              <PrivateRoutes>
+                <CreateWorkerProfile />
               </PrivateRoutes>
             }
           ></Route>

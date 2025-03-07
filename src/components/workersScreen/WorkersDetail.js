@@ -1,14 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 function WorkersDetail() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [workerDetails, setWorkerDetails] = useState({});
+  const [workerReviews, setWorkerReviews] = useState([]);
+
   const navigate = useNavigate();
+  const [params] = useSearchParams();
+  const idParams = params.get("id");
+  const nameParams = params.get("name");
   const [userDetails, setUserDetails] = useState({
     name: "",
     email: "",
     type: "",
   });
+
   //decode jwt token from localstorage
   const decodeJwtToken = () => {
     const token = localStorage.getItem("token");
@@ -22,22 +30,65 @@ function WorkersDetail() {
     return isLoggedIn === null ? false : true;
   };
 
+  //function that gets the worker details
+  const getWorkerDetails = () => {
+    setIsLoading(true);
+    try {
+      fetch(`http://localhost:2000/worker/get-worker/${idParams}`).then(
+        async (res) => {
+          const data = await res.json();
+          setWorkerDetails(data.worker[0]);
+          setIsLoading(false);
+        }
+      );
+    } catch (error) {
+      setIsLoading(false);
+    }
+  };
+
+  //function to get reviews
+  const getWorkerReviews = () => {
+    setIsLoading(true);
+    try {
+      fetch(`http://localhost:2000/review/get-review/${idParams}`).then(
+        async (res) => {
+          if (res.status === 200) {
+            const data = await res.json();
+            setWorkerReviews(data.data);
+            console.log(workerReviews)
+          }
+          else {
+
+          }
+        }
+      );
+    } catch (error) {
+      setIsLoading(false);
+    }
+  };
+  //function to get review posted time ago
+  
+
   useEffect(() => {
     if (isUserLoggedIn()) {
       setUserDetails(decodeJwtToken());
     }
+    getWorkerDetails();
+    getWorkerReviews()
   }, []);
+
   return (
     <>
       <div>
         <div class="container mx-auto px-4 py-8">
           <p className="text-md mb-2 ml-1">
-            <span className="font-bold">Category: </span>Electrition{" "}
+            <span className="font-bold">Category: </span>
+            {workerDetails.workerCategory}
           </p>
           <div class="flex flex-wrap -mx-4">
             <div class="w-full md:w-1/2 px-4 mb-8">
               <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxowASx_actmSWTTuMdoVg6wk4ogpoGoQKhg&s"
+                src={`http://localhost:2000/${workerDetails.workerPicture}`}
                 alt="Product"
                 class="w-full h-auto rounded-lg shadow-md mb-4"
                 id="mainImage"
@@ -46,8 +97,7 @@ function WorkersDetail() {
 
             <div class="w-full md:w-1/2 px-4">
               <h2 class="text-3xl font-bold mb-2">
-                I am a professional electrition Lorem ipsum, dolor sit amet
-                consectetur adip.
+                {workerDetails.workerTagline}
               </h2>
               <div class="flex mb-4 items-center gap-2">
                 <img
@@ -56,7 +106,7 @@ function WorkersDetail() {
                   class="w-8 h-8 rounded-full"
                 />
                 <div>
-                  <p class="text-gray-700">Muhammad Shahroz Shahzad</p>
+                  <p class="text-gray-700">{workerDetails.workerName}</p>
                 </div>
               </div>
               <div class="flex items-center mb-4">
@@ -75,20 +125,21 @@ function WorkersDetail() {
                 <span class="ml-2 text-gray-600">4.5 (120 reviews)</span>
               </div>
               <p class="text-gray-700 mb-6">
-                Experience premium sound quality and industry-leading noise
-                cancellation with these wireless headphones. Perfect for music
-                lovers and frequent travelers.
+                {workerDetails.workerDescription}
               </p>
               {isUserLoggedIn() && userDetails.type === "postWork" ? (
                 <button
-                  onClick={()=>navigate('/hire-worker')}
+                  onClick={() => navigate("/hire-worker")}
                   type="button"
                   class="text-white bg-black  font-medium rounded-lg px-5 py-2.5 me-2"
                 >
                   Hire now
                 </button>
               ) : (
-                <p><span className="font-bold">Note:</span> Only post work profiles can hire workers</p>
+                <p>
+                  <span className="font-bold">Note:</span> Only post work
+                  profiles can hire workers
+                </p>
               )}
             </div>
           </div>
@@ -98,31 +149,33 @@ function WorkersDetail() {
               <h2 class="text-gray-900 text-3xl font-bold font-manrope leading-normal">
                 Reviews
               </h2>
-              <div class="w-full flex-col justify-start items-start gap-3 flex">
-                <div class="justify-start items-center gap-2.5 flex">
-                  <div class="w-10 h-10 bg-gray-300 rounded-full justify-start items-start gap-2.5 flex">
-                    <img
-                      class="rounded-full object-cover"
-                      src="https://pagedone.io/asset/uploads/1714988283.png"
-                      alt="Jenny wilson image"
-                    />
+              {workerReviews.map(review => {
+                return (
+                  <div class="w-full flex-col justify-start items-start gap-3 flex">
+                    <div class="justify-start items-center gap-2.5 flex">
+                      <div class="w-10 h-10 bg-gray-300 rounded-full justify-start items-start gap-2.5 flex">
+                        <img
+                          class="rounded-full object-cover"
+                          src={review.userImgUrl}
+                          alt="Jenny wilson image"
+                        />
+                      </div>
+                      <div class="flex-col justify-start items-start gap-1 inline-flex">
+                        <h5 class="text-gray-900 text-sm font-semibold leading-snug">
+                          {review.userName}
+                        </h5>
+                        <h6 class="text-gray-500 text-xs font-normal leading-5">
+                          {review.createdAt}
+                        </h6>
+                      </div>
+                    </div>
+                    <p class="text-gray-800 text-sm font-normal leading-snug">
+                      {review.reviewText}
+                    </p>
+                    <hr />
                   </div>
-                  <div class="flex-col justify-start items-start gap-1 inline-flex">
-                    <h5 class="text-gray-900 text-sm font-semibold leading-snug">
-                      Jenny Wilson
-                    </h5>
-                    <h6 class="text-gray-500 text-xs font-normal leading-5">
-                      1 hr ago
-                    </h6>
-                  </div>
-                </div>
-                <p class="text-gray-800 text-sm font-normal leading-snug">
-                  This novel's character development is outstanding! The
-                  protagonist's journey is so well-crafted and realistic. I felt
-                  like I was growing along with them as I read.
-                </p>
-                <hr />
-              </div>
+                );
+              })}
             </div>
             <div className="mt-5">
               <div class="py-2 px-4 mb-4 rounded-lg rounded-t-lg border w-full">

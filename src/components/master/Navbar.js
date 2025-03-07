@@ -6,6 +6,9 @@ import { jwtDecode } from "jwt-decode";
 function Navbar() {
   const { searchQuery, setSearchQuery, logout } = useContext(StateContext);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [showDropDown, setShowDropDown] = useState(false);
+  const [pictureUrl, setPictureUrl] = useState(null)
+
   const navigate = useNavigate();
   const [userDetails, setUserDetails] = useState({
     name: "",
@@ -19,19 +22,23 @@ function Navbar() {
     let isLoggedIn = localStorage.getItem("token");
     return isLoggedIn === null ? false : true;
   };
-
   //decode jwt token from localstorage
   const decodeJwtToken = () => {
     const token = localStorage.getItem("token");
     const data = jwtDecode(token);
     return data.user;
   };
+  
+  //get picture of url to set in logo
+  const getPictureUrl = async () => {
+    const picture = await decodeJwtToken().picture;
+    setPictureUrl(picture)
+  };
 
   useEffect(() => {
     if (isUserLoggedIn()) {
-    
       setUserDetails(decodeJwtToken());
-      
+      getPictureUrl()
     }
   }, []);
 
@@ -52,13 +59,54 @@ function Navbar() {
             >
               {isUserLoggedIn() ? "Dashboard" : "Home"}
             </Link>
-            {isUserLoggedIn() && userDetails.type === "postWork" && (
+            {isUserLoggedIn() && userDetails.type === "postWork" ? (
               <Link
                 to="/my-jobs"
                 className="hover:underline decoration-brandcolor decoration-2 underline-offset-4 mr-7"
               >
                 My jobs
               </Link>
+            ) : (
+              <>
+                <div>
+                  <button
+                    onClick={() => setShowDropDown((prev) => !prev)}
+                    className="relative flex items-center"
+                  >
+                    <p>My business</p>
+                    <svg
+                      class="w-2.5 h-2.5 ms-3"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 10 6"
+                    >
+                      <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="m1 1 4 4 4-4"
+                      />
+                    </svg>
+                  </button>
+                  <ul
+                    role="menu"
+                    hidden={!showDropDown}
+                    class="absolute z-10 min-w-[180px] overflow-auto rounded-lg border border-slate-200 bg-white p-1.5 shadow-lg shadow-sm focus:outline-none"
+                  >
+                    <li
+                      onClick={() => {
+                        navigate('/my-profile')
+                      }}
+                      role="menuitem"
+                      class="cursor-pointer text-slate-800 text-sm flex w-full items-center rounded-md p-3 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 text-red-500"
+                    >
+                      <p className="ml-2">My profiles</p>
+                    </li>
+                  </ul>
+                </div>
+              </>
             )}
           </div>
           <div
@@ -81,7 +129,7 @@ function Navbar() {
               onClick={() => {
                 //handle search button click
                 const params = new URLSearchParams();
-                params.append("type", 'jobs');
+                params.append("type", "jobs");
                 params.append("query", searchQuery);
 
                 navigate(`/search?${params.toString()}`);
@@ -110,7 +158,7 @@ function Navbar() {
                   >
                     <img
                       className="rounded-full p-1"
-                      src={require("../../img/profile-photo.jpg")}
+                      src={`http://localhost:2000/${pictureUrl}`}
                       alt="P"
                     />
                   </button>
@@ -122,11 +170,11 @@ function Navbar() {
                     <li
                       onClick={() => {
                         const params = new URLSearchParams();
-                        params.append('type','account')
-                        navigate(`/settings?${params.toString()}`)
+                        params.append("type", "account");
+                        navigate(`/settings?${params.toString()}`);
                       }}
                       role="menuitem"
-                      class="cursor-pointer text-slate-800 text-sm flex w-full items-center rounded-md p-3 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 text-red-500"
+                      class="cursor-pointer text-slate-800 text-sm flex w-full items-center rounded-md p-3 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100"
                     >
                       <i class="fa fa-user" aria-hidden="true"></i>
                       <p className="ml-2">Profile</p>

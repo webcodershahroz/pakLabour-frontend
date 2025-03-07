@@ -26,17 +26,27 @@ function Dashboard() {
           Welcome, {userDetails.name}
         </h1>
         <div className="w-full flex items-center justify-center absolute -bottom-9">
-          {userDetails.type === "postWork" &&
-              <div  className="flex justify-evenly items-center w-[50%] bg-white drop-shadow-xl rounded py-5 ">
-                <p className="text-2xl font-medium">Post your job here</p>
-                <Link
-                  to={"/post-job"}
-                  className="bg-black rounded text-white px-6 py-3 "
-                >
-                  Post a job
-                </Link>
-              </div>
-          }
+          {userDetails.type === "postWork" ? (
+            <div className="flex justify-evenly items-center w-[50%] bg-white drop-shadow-xl rounded py-5 ">
+              <p className="text-2xl font-medium">Post your job here</p>
+              <Link
+                to={"/post-job"}
+                className="bg-black rounded text-white px-6 py-3 "
+              >
+                Post a job
+              </Link>
+            </div>
+          ) : (
+            <div className="flex justify-evenly items-center w-[50%] bg-white drop-shadow-xl rounded py-5 ">
+              <p className="text-2xl font-medium">Create a worker profile</p>
+              <Link
+                to={"/create-worker-profile"}
+                className="bg-black rounded text-white px-6 py-3 "
+              >
+                Create now
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </div>
