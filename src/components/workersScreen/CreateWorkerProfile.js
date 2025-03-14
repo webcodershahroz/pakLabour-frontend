@@ -5,7 +5,7 @@ import Alert from "../utils/Alert";
 
 function CreateWorkerProfile() {
   const [pictureUrl, setPictureUrl] = useState(null);
-    const [previewUrl, setPreviewUrl] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
   const navigate = useNavigate();
   const {
     isAlertVisible,
@@ -47,8 +47,7 @@ function CreateWorkerProfile() {
     setIsLoading(true);
     const userId = await decodeJwtToken()._id;
     const formData = new FormData();
-    formData.append("userId", userId);
-    formData.append("workerName", workerProfileData.workerName);
+    formData.append("user", userId);
     formData.append("workerTagline", workerProfileData.workerTagline);
     formData.append("workerDescription", workerProfileData.workerDescription);
     formData.append("workerLocation", workerProfileData.workerLocation);

@@ -1,10 +1,14 @@
 import React, { useContext, useState } from "react";
 import Alert from "./utils/Alert";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { StateContext } from "../context/StateContext";
 
 function ApplyNowScreen() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const titleParam = searchParams.get("title");
+  const idParam = searchParams.get("id");
+  const [isLoading, setIsLoading] = useState(false);
   const {
     isAlertVisible,
     setIsAlertVisible,
@@ -13,15 +17,13 @@ function ApplyNowScreen() {
     hideAlert,
     decodeJwtToken,
   } = useContext(StateContext);
-  const [isLoading, setIsLoading] = useState(false);
 
   //job states
   const [applyNowData, setApplyNowData] = useState({
-    title: "",
+    title: titleParam,
     description: "",
     price: "",
-    location: "",
-    duration:""
+    duration: "",
   });
 
   //handle text input change
@@ -31,15 +33,80 @@ function ApplyNowScreen() {
   };
 
   //funtion to hire worker
-  const hireWorker = async () => {};
+  const hireWorker = async () => {
+    setIsLoading(true)
+    const user = await decodeJwtToken()._id;
+    const payload = {
+      user,
+      jobId: idParam,
+      jobTitle: applyNowData.title,
+      jobDescription: applyNowData.description,
+      jobDuration: applyNowData.duration,
+      jobPrice: applyNowData.price,
+    };
+    fetch("http://localhost:2000/apply/apply-now", {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((res) => {
+      if (res.status === 200) {
+        setAlertData({
+          title: "Success",
+          message: "Applied successfully for the job",
+          type: "success",
+        });
+        setIsAlertVisible(true);
+        hideAlert();
+      } else {
+        setAlertData({
+          title: "Error",
+          message: "Something went wrong",
+          type: "error",
+        });
+        setIsAlertVisible(true);
+        hideAlert();
+      }
+      setIsLoading(false)
+    });
+  };
 
   //function to handle post button click
-  const handleHireButtonClick = async () => {};
+  const handleHireButtonClick = async () => {
+    if (
+      applyNowData.description.length > 0 &&
+      applyNowData.location.length > 0 &&
+      applyNowData.duration.length > 0
+    ) {
+      if (applyNowData.price.length > 3) await hireWorker();
+      else {
+        setAlertData({
+          title: "Price Limit",
+          message: "Price must be greater than or equal to 1000",
+          type: "warning",
+        });
+        setIsAlertVisible(true);
+        hideAlert();
+      }
+    } else {
+      setAlertData({
+        title: "Empty Fields",
+        message: "Please fill all the fields ",
+        type: "warning",
+      });
+      setIsAlertVisible(true);
+      hideAlert();
+
+    }
+  };
   return (
     <>
       {isAlertVisible && <Alert alertData={alertData} />}
 
-      <strong className="font-bold text-4xl mt-7 block ml-10">Job title</strong>
+      <strong className="font-bold text-4xl mt-7 block ml-10">
+        {titleParam}
+      </strong>
       <div className="border border-gray mx-8 rounded px-10 py-2">
         <div className="pb-2 flex justify-start items-baseline flex-wrap">
           <div className="xl:w-1/3 md:w-1/3">
@@ -64,13 +131,13 @@ function ApplyNowScreen() {
                 <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-brandcolor">
                   <input
                     maxlength="50"
-                    onChange={handleTextInputChange}
+                    // onChange={handleTextInputChange}
+                    value={titleParam}
                     type="text"
                     disabled
                     name="title"
                     id="title"
-                    className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
-                    placeholder="Title of your job"
+                    className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-400 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
                   />
                 </div>
               </div>
@@ -118,7 +185,7 @@ function ApplyNowScreen() {
                 </div>
               </div>
             </div>
-           
+
             <div className="sm:col-span-4">
               <label
                 htmlFor="start-time"
@@ -139,6 +206,7 @@ function ApplyNowScreen() {
                 </div>
               </div>
             </div>
+
           </div>
         </div>
         <div className="mt-6 flex items-center justify-end gap-x-6">
@@ -150,6 +218,7 @@ function ApplyNowScreen() {
           </button>
           <button
             onClick={handleHireButtonClick}
+            disabled={isLoading}
             className={`rounded-md px-3 py-2 text-sm font-semibold text-black shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brandcolor ${
               isLoading ? "cursor-not-allowed bg-gray-400" : "bg-brandcolor"
             }`}

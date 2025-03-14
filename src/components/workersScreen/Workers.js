@@ -14,6 +14,7 @@ function Workers() {
         const data = await res.json();
         setSearchResultWorkers(data);
         setIsLoading(false);
+        console.log(SearchResultWorkers)
       });
     } catch (error) {
       setIsLoading(false);
@@ -37,8 +38,8 @@ function Workers() {
           return (
             <button onClick={()=>{
               const params = new URLSearchParams();
-              params.append('name',worker.workerName.toLowerCase())
-              params.append('id',worker.userId)
+              params.append('name',worker.user.name.toLowerCase())
+              params.append('id',worker.user._id)
 
               navigate(`/worker?${params.toString()}`)
               
@@ -50,12 +51,12 @@ function Workers() {
                   className="h-52 w-full border-b border-stone-400"
                 />
                 <img
-                  src="https://cdn.vectorstock.com/i/500p/53/42/user-member-avatar-face-profile-icon-vector-22965342.jpg"
-                  alt=""
+                  src={`http://localhost:2000/${worker.user.picture}`}
+                  alt="UP"
                   className="h-20 w-20 rounded-full absolute right-[36%] -bottom-10"
                 />
               </div>
-              <strong className="font-bold mt-8"> {worker.workerName} </strong>
+              <strong className="font-bold mt-8"> {worker.user.name} </strong>
               <div className="flex items-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -74,7 +75,7 @@ function Workers() {
                 <p className="text-sm font-medium text-black">115 reviews</p>
               </div>
               <p className="text-justify p-2">
-                {worker.workerDescription}
+                {worker.workerTagline}
               </p>
             </button>
           );

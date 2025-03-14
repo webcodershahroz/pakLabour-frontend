@@ -22,11 +22,12 @@ function MyJobs() {
     setIsLoading(true);
     const userId = decodeJwtToken()._id;
     try {
-      fetch(`http://localhost:2000/job/get-job/${userId}`).then(async (res) => {
+      fetch(`http://localhost:2000/job/get-user-job/${userId}`).then(async (res) => {
         //user has posted jobs
         if (res.status === 200) {
           const data = await res.json();
           setMyJobs(data.jobs);
+          console.log(data)
         }
         //server error
         else {

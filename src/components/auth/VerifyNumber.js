@@ -5,7 +5,7 @@ import { StateContext } from "../../context/StateContext";
 
 function VerifyNumber({ route }) {
   const location = useLocation();
-  const { name, accountType, password } = location.state;
+  const { name, accountType,userLocation, password } = location.state;
   const [email, setEmail] = useState(location.state.email);
   const {
     isAlertVisible,
@@ -27,6 +27,7 @@ function VerifyNumber({ route }) {
     const payload = {
       name,
       type: accountType,
+      location: userLocation,
       email,
       password,
     };

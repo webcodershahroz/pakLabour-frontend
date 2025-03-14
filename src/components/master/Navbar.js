@@ -4,10 +4,10 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
 function Navbar() {
-  const { searchQuery, setSearchQuery, logout } = useContext(StateContext);
+  const { searchQuery, setSearchQuery, logout , decodeJwtToken,isUserLoggedIn} = useContext(StateContext);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showDropDown, setShowDropDown] = useState(false);
-  const [pictureUrl, setPictureUrl] = useState(null)
+  const [pictureUrl, setPictureUrl] = useState("")
 
   const navigate = useNavigate();
   const [userDetails, setUserDetails] = useState({
@@ -17,17 +17,7 @@ function Navbar() {
   });
   const location = useLocation();
 
-  //function that chect if user is logged in or not
-  const isUserLoggedIn = () => {
-    let isLoggedIn = localStorage.getItem("token");
-    return isLoggedIn === null ? false : true;
-  };
-  //decode jwt token from localstorage
-  const decodeJwtToken = () => {
-    const token = localStorage.getItem("token");
-    const data = jwtDecode(token);
-    return data.user;
-  };
+ 
   
   //get picture of url to set in logo
   const getPictureUrl = async () => {
@@ -158,7 +148,7 @@ function Navbar() {
                   >
                     <img
                       className="rounded-full p-1"
-                      src={`http://localhost:2000/${pictureUrl}`}
+                      src={`http://localhost:2000/${decodeJwtToken().picture}`}
                       alt="P"
                     />
                   </button>

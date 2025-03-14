@@ -47,7 +47,7 @@ function PostJob() {
     const userId = await decodeJwtToken()._id;
     console.log(userId);
     const formData = new FormData();
-    formData.append("userId", userId);
+    formData.append("user", userId);
     formData.append("title", jobData.title);
     formData.append("description", jobData.description);
     formData.append("price", jobData.price);

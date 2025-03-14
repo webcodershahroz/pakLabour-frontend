@@ -9,6 +9,7 @@ function CreateNewAccount() {
   const [email, setEmail] = useState(location.state);
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [userLocation, setUserLocation] = useState("");
   const [isAlertVisible, setIsAlertVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -40,6 +41,7 @@ function CreateNewAccount() {
             state: {
               name,
               email,
+              userLocation,
               accountType,
               password,
             },
@@ -168,6 +170,21 @@ function CreateNewAccount() {
                   value={name}
                   className=" border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                   placeholder="Muhammad Shahroz"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="name" className="block mb-2 text-sm font-medium">
+                 Location
+                </label>
+                <input
+                  type="text"
+                  onChange={(e) => setUserLocation(e.target.value)}
+                  name="userlocation"
+                  id="userlocation"
+                  value={userLocation}
+                  className=" border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                  placeholder="Pakistan"
                   required
                 />
               </div>
