@@ -3,7 +3,7 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import { StateContext } from "../context/StateContext";
 import Alert from "./utils/Alert";
 import Loading from "./utils/Loading";
-import ActivityIndicator from "./master/ActivityIndicator";
+import ActivityIndicator from "./utils/ActivityIndicator";
 function MyJobs() {
   const navigate = useNavigate();
   const [myJobs, setMyJobs] = useState([]);

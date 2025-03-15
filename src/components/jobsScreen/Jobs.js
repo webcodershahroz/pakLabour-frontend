@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Loading from "../utils/Loading";
+import ActivityIndicator from "../utils/ActivityIndicator";
 
 function Jobs(props) {
   const [SearchResultJobs, setSearchResultJobs] = useState([]);
@@ -32,7 +32,7 @@ function Jobs(props) {
   return (
     <>
       {isLoading ? (
-        <Loading />
+        <ActivityIndicator />
       ) : (
         <div className="container mx-auto mb-10">
           <div className="w-full flex flex-wrap gap-y-2 gap-x-3 sm:mx-2">

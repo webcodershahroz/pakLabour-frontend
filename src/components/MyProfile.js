@@ -3,7 +3,7 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import { StateContext } from "../context/StateContext";
 import Alert from "./utils/Alert";
 import Loading from "./utils/Loading";
-import ActivityIndicator from "./master/ActivityIndicator";
+import ActivityIndicator from "./utils/ActivityIndicator";
 
 function MyProfile() {
   const navigate = useNavigate();
@@ -23,7 +23,7 @@ function MyProfile() {
     setIsLoading(true);
     const userId = decodeJwtToken()._id;
     try {
-      fetch(`http://localhost:2000/worker/get-worker/${userId}`).then(
+      fetch(`http://localhost:2000/worker/get-worker-profiles/${userId}`).then(
         async (res) => {
           //user has posted jobs
           if (res.status === 200) {

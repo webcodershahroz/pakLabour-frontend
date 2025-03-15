@@ -1,7 +1,6 @@
 import React, { createContext, useState } from "react";
 
 import { jwtDecode } from "jwt-decode";
-import { useLocation } from "react-router-dom";
 export const StateContext = createContext();
 
 export function StateContextProvider({ children }) {
@@ -10,6 +9,8 @@ export function StateContextProvider({ children }) {
   const [isAlertVisible, setIsAlertVisible] = useState(false);
   const [otp, setOtp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [workerAnalytics, setWorkerAnalytics] = useState();
+
   // const location = useLocation();
 
   //alert states
@@ -120,6 +121,29 @@ export function StateContextProvider({ children }) {
     localStorage.removeItem("token");
     window.location.reload();
   };
+
+  //function to update worker analytics
+  const updateWorkerAnalytics = async (data) => {
+    const payload = {
+      user: decodeJwtToken()._id,
+      orderCompleted :data.orderCompleted,
+      averageRating : data.averageRating
+    }
+    try {
+      fetch(`http://localhost:2000/worker/update-analytics`, {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }).then(async (res) => {
+        const data = await res.json();
+        setWorkerAnalytics(data);
+      });
+    } catch (error) {}
+  };
+
+
   return (
     <StateContext.Provider
       value={{
@@ -139,6 +163,8 @@ export function StateContextProvider({ children }) {
         otp,
         logout,
         isUserLoggedIn,
+        updateWorkerAnalytics,
+        workerAnalytics
       }}
     >
       {children}

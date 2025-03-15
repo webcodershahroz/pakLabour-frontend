@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { Link } from "react-router-dom";
+import { StateContext } from "../context/StateContext";
+
 function Dashboard() {
   const [userDetails, setUserDetails] = useState({
     name: "",
     email: "",
     type: "",
   });
+  const { updateWorkerAnalytics,workerAnalytics } = useContext(StateContext);
 
   //decode jwt token from localstorage
   const decodeJwtToken = () => {
@@ -14,8 +17,11 @@ function Dashboard() {
     const data = jwtDecode(token);
     return data.user;
   };
+
   useEffect(() => {
     setUserDetails(decodeJwtToken());
+      //  updateWorkerAnalytics({orderCompleted:30, averageRating:4.5})
+      
   }, []);
   return (
     <div className="h-[70vh] mb-14">

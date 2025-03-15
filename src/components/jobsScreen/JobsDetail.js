@@ -104,7 +104,7 @@ function JobsDetail() {
                 <div class="flex flex-wrap -mx-4">
                   <div class="md:w-3/4 px-4">
                     <h2 class="text-3xl font-bold mb-2">
-                      {jobDetails.tagLine}
+                      {jobDetails.title}
                     </h2>
                     <div>
                       <h2 className="font-bold text-gray-600">

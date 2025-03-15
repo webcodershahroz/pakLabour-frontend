@@ -48,6 +48,7 @@ function CreateWorkerProfile() {
     const userId = await decodeJwtToken()._id;
     const formData = new FormData();
     formData.append("user", userId);
+    formData.append("workerAnalytics", userId);
     formData.append("workerTagline", workerProfileData.workerTagline);
     formData.append("workerDescription", workerProfileData.workerDescription);
     formData.append("workerLocation", workerProfileData.workerLocation);

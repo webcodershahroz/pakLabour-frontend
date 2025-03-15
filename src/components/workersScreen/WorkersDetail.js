@@ -67,7 +67,18 @@ function WorkersDetail() {
         },
       }).then(async (res) => {
         if (res.status === 200) {
-          setWorkerReviews((prev) => [...prev, payload]);
+          const date = new Date();
+          setWorkerReviews((prev) => [
+            ...prev,
+            {
+              reviewMessage,
+              createdAt: date.toDateString(),
+              user: {
+                picture: decodeJwtToken().picture,
+                name: decodeJwtToken().name,
+              },
+            },
+          ]);
         } else {
         }
       });
@@ -118,7 +129,7 @@ function WorkersDetail() {
   return (
     <>
       {isAlertVisible && <Alert alertData={alertData} />}
-      {workerDetails.user && (
+      {workerDetails && workerDetails.user && (
         <div>
           <div class="container mx-auto px-4 py-8">
             <p className="text-md mb-2 ml-1">
@@ -143,11 +154,23 @@ function WorkersDetail() {
                   <img
                     src={`http://localhost:2000/${workerDetails.user.picture}`}
                     alt="User Avatar"
-                    class="w-8 h-8 rounded-full"
+                    class="w-10 h-10 rounded-full"
                   />
                   <div>
                     <p class="text-gray-700">{workerDetails.user.name}</p>
+                    <p className="text-xs">
+                      Last active :{" "}
+                      {workerDetails.workerAnalytics.lastActive || "Not Known"}
+                    </p>
                   </div>
+                </div>
+                <div className="flex gap-3 items-center">
+                  <h3 className="text-md font-medium text-gray-500">
+                    Location:
+                  </h3>
+                  <p className="text-md text-gray-700">
+                    {workerDetails.user.location || "Unknown"}
+                  </p>
                 </div>
                 <div class="flex items-center mb-4">
                   <svg
@@ -163,10 +186,14 @@ function WorkersDetail() {
                     />
                   </svg>
                   <span class="ml-2 text-gray-600">
-                    4.5 ({workerReviews.length} Review)
+                    {workerDetails.workerAnalytics.averageRating || 0} (
+                    {workerReviews.length} Review)
                   </span>
                   <span className="font-bold text-xl ml-2">.</span>
-                  <span class="ml-2 text-gray-600">2 Orders completed</span>
+                  <span class="ml-2 text-gray-600">
+                    {workerDetails.workerAnalytics.orderCompleted || 0} Orders
+                    completed
+                  </span>
                 </div>
                 <p class="text-gray-700 mb-6">
                   {workerDetails.workerDescription}
