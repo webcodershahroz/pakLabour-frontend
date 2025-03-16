@@ -32,12 +32,14 @@ function PostJob() {
   };
 
   //handle file input change
-  const handleFileInputChange = (e) => {
-    setPictureUrl(e.target.files[0]);
+  const handleFileInputChange = async (e) => {
+    const files = Array.from(e.target.files);
+    setPictureUrl(files);
     try {
-      setPreviewUrl(URL.createObjectURL(e.target.files[0]))
+      const previews = files.map((file) => URL.createObjectURL(file));
+      setPreviewUrl(previews);
     } catch (error) {
-      console.log(error.message)
+      console.log(error.message);
     }
   };
 
@@ -53,7 +55,7 @@ function PostJob() {
     formData.append("price", jobData.price);
     formData.append("searchTags", jobData.searchTags);
 
-    if (pictureUrl) formData.append("picture", pictureUrl);
+    if (pictureUrl) pictureUrl.forEach(picture => formData.append('pictures',picture))
 
     try {
       fetch("http://localhost:2000/job/post-job", {
@@ -68,7 +70,7 @@ function PostJob() {
           });
           setIsAlertVisible(true);
           hideAlert();
-          navigate('/my-jobs');
+          navigate("/my-jobs");
         } else {
           setAlertData({
             title: "Error",
@@ -97,12 +99,10 @@ function PostJob() {
     if (
       jobData.title.length > 0 &&
       jobData.description.length > 0 &&
-      jobData.searchTags.length > 0 
-      
-    ){
-      if(jobData.price.length > 3)
-        await postJob();
-      else{
+      jobData.searchTags.length > 0
+    ) {
+      if (jobData.price.length > 3) await postJob();
+      else {
         setAlertData({
           title: "Price Limit",
           message: "Price must be greater than or equal to 1000",
@@ -111,10 +111,7 @@ function PostJob() {
         setIsAlertVisible(true);
         hideAlert();
       }
-      }
-      
-    
-    else {
+    } else {
       setAlertData({
         title: "Empty Fields",
         message: "Please fill all the fields ",
@@ -152,7 +149,8 @@ function PostJob() {
               </label>
               <div className="mt-2">
                 <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-brandcolor">
-                  <input  maxlength="50"
+                  <input
+                    maxlength="50"
                     onChange={handleTextInputChange}
                     type="text"
                     name="title"
@@ -172,7 +170,8 @@ function PostJob() {
                 Description
               </label>
               <div className="mt-2">
-                <textarea maxLength="300"
+                <textarea
+                  maxLength="300"
                   onChange={handleTextInputChange}
                   name="description"
                   id="description"
@@ -180,7 +179,9 @@ function PostJob() {
                   className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-brandcolor sm:text-sm/6"
                 ></textarea>
               </div>
-              <p className="mt-3 text-sm/6 text-gray-600">Write about your job</p>
+              <p className="mt-3 text-sm/6 text-gray-600">
+                Write about your job
+              </p>
             </div>
 
             <div className="sm:col-span-4">
@@ -235,16 +236,23 @@ function PostJob() {
                 id="file-upload"
                 name="file-upload"
                 type="file"
+                multiple={true}
               />
-            </div>
-            <div>
-              {previewUrl?<img src={previewUrl} height={200} width={200} alt="d" />:''}
-              
+              <div className="flex gap-2 flex-wrap mt-3">
+                {previewUrl
+                  ? previewUrl.map((pu) => {
+                      return <img src={pu} className="object-contain" height={100} width={100} alt="d" />;
+                    })
+                  : ""}
+              </div>
             </div>
           </div>
         </div>
         <div className="mt-6 flex items-center justify-end gap-x-6">
-          <button type="button" className="text-sm/6 font-semibold text-gray-900">
+          <button
+            type="button"
+            className="text-sm/6 font-semibold text-gray-900"
+          >
             Cancel
           </button>
           <button

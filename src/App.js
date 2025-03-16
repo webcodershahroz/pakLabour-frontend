@@ -26,7 +26,8 @@ import Settings from "./components/settingsScreen/Settings";
 import HireNowScreen from "./components/HireNowScreen";
 import ApplyNowScreen from "./components/ApplyNowScreen";
 import CreateWorkerProfile from "./components/workersScreen/CreateWorkerProfile";
-import MyProfile from "./components/MyProfile";
+import WorkerProfiles from "./components/workersScreen/WorkerProfiles";
+import WorkerOrders from "./components/workersScreen/WorkerOrders";
 
 //function that chect if user is logged in or not
 const isUserLoggedIn = () => {
@@ -146,7 +147,16 @@ function App() {
             path="/my-profile"
             element={
               <PrivateRoutes>
-                <MyProfile />
+                <WorkerProfiles />
+              </PrivateRoutes>
+            }
+          />
+
+          <Route
+            path="/my-orders"
+            element={
+              <PrivateRoutes>
+                <WorkerOrders />
               </PrivateRoutes>
             }
           />

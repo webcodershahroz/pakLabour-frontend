@@ -33,7 +33,7 @@ function ApplyNowScreen() {
   };
 
   //funtion to hire worker
-  const hireWorker = async () => {
+  const applyNow = async () => {
     setIsLoading(true)
     const user = await decodeJwtToken()._id;
     const payload = {
@@ -59,6 +59,7 @@ function ApplyNowScreen() {
         });
         setIsAlertVisible(true);
         hideAlert();
+        navigate('/my-profile')
       } else {
         setAlertData({
           title: "Error",
@@ -73,13 +74,12 @@ function ApplyNowScreen() {
   };
 
   //function to handle post button click
-  const handleHireButtonClick = async () => {
+  const handleApplyNowButtonClick = async () => {
     if (
       applyNowData.description.length > 0 &&
-      applyNowData.location.length > 0 &&
       applyNowData.duration.length > 0
     ) {
-      if (applyNowData.price.length > 3) await hireWorker();
+      if (applyNowData.price.length > 3) await applyNow();
       else {
         setAlertData({
           title: "Price Limit",
@@ -217,7 +217,7 @@ function ApplyNowScreen() {
             Cancel
           </button>
           <button
-            onClick={handleHireButtonClick}
+            onClick={handleApplyNowButtonClick}
             disabled={isLoading}
             className={`rounded-md px-3 py-2 text-sm font-semibold text-black shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brandcolor ${
               isLoading ? "cursor-not-allowed bg-gray-400" : "bg-brandcolor"

@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import myPic from "../../img/profile-photo.jpg";
+import ActivityIndicator from '../utils/ActivityIndicator'
 
 function JobBids() {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const jobTitle = searchParams.get("title");
   const idParam = searchParams.get("id");
@@ -14,13 +16,14 @@ function JobBids() {
     try {
       fetch(`http://localhost:2000/apply/get-job-bids/${idParam}`).then(
         async (res) => {
-          if(res.status===200){
-
+          if (res.status === 200) {
             const data = await res.json();
             setJobBids(data.bids);
-            console.log(data)
-            // setIsLoading(false);
+            console.log(data);
+
           }
+      setIsLoading(false);
+
         }
       );
     } catch (error) {
@@ -28,54 +31,69 @@ function JobBids() {
     }
   };
 
-  useEffect(()=>{
-    getJobBids()
-  },[])
+  useEffect(() => {
+    
+    getJobBids();
+  }, []);
   return (
     <>
-      <div className="container mx-auto h-fit my-4">
-        <h1 className="font-bold text-3xl my-6">{jobTitle}</h1>
-        {JobBids.map((bid) => {
-          return (
-            <div className="flex flex-wrap gap-3">
-              <button className="flex flex-col p-5 hover:bg-stone-100 cursor-pointer rounded border border-stone-400 xl:w-[49%] h-fit">
-                <div className="flex gap-3">
-                  <img src={`http://localhost:2000/${bid.user.picture}`} height={100} width={100} alt="" />
-                  <div className="flex flex-col items-start">
-                    <p className="text-sm text-gray-600">
-                      {bid.workerLocation}
-                    </p>
-                    <strong className="text-2xl font-medium text-gray-700">
-                      {bid.user.name}
-                    </strong>
-                    <span className="text-gray-500 font-bold">
-                      PKR {bid.jobPrice}
-                      <span className="text-sm font-normal">in 30 days</span>
-                    </span>
-                    <div className="flex">
-                      <span className=" w-[fit-content] rounded-full py-1 mr-3 text-gray-700">
-                        <strong>{bid.jobCategory} </strong>
+      {isLoading ? (
+        <ActivityIndicator />
+      ) : (
+        <div className="container mx-auto h-fit my-4">
+          <h1 className="font-bold text-3xl my-6">{jobTitle}</h1>
+          {JobBids.map((bid) => {
+            return (
+              <div className="flex flex-wrap gap-3">
+                <button
+                  onClick={() => {
+                    const params = new URLSearchParams();
+                    params.append("name", bid.user.name);
+                    params.append("id", bid.pid);
+
+                    navigate(`/worker?${params.toString()}`);
+                  }}
+                  className="flex flex-col p-5 hover:bg-stone-100 cursor-pointer rounded border border-stone-400 xl:w-[49%] h-fit"
+                >
+                  <div className="flex gap-3">
+                    <img
+                      src={`http://localhost:2000/${bid.user.picture}`}
+                      height={100}
+                      width={100}
+                      alt=""
+                    />
+                    <div className="flex flex-col items-start">
+                      <p className="text-sm text-gray-600">
+                        {bid.workerLocation}
+                      </p>
+                      <strong className="text-2xl font-medium text-gray-700">
+                        {bid.user.name}
+                      </strong>
+                      <span className="text-gray-500 font-bold">
+                        PKR {bid.jobPrice}
+                        <span className="text-sm font-normal">in 30 days</span>
                       </span>
+                      <div className="flex">
+                        <span className=" w-[fit-content] rounded-full py-1 mr-3 text-gray-700">
+                          <strong>{bid.jobCategory} </strong>
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div>
-                  <p className="text-justify my-4">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Quam quos praesentium obcaecati error dolore. Enim
-                    recusandae officia aut odio labore. Libero repellat haru
-                  </p>
-                </div>
-              </button>
-            </div>
-          );
-        })}
-        {JobBids.length === 0 && (
-              <div className="w-full text-center mt-4">
-                <p className="text-3xl">No Biddings yet</p>
+                  <div>
+                    <p className="text-justify my-4">{bid.jobDescription}</p>
+                  </div>
+                </button>
               </div>
-            )}
-      </div>
+            );
+          })}
+          {!isLoading && JobBids.length === 0 && (
+            <div className="w-full text-center mt-4">
+              <p className="text-3xl">No Biddings yet</p>
+            </div>
+          )}
+        </div>
+      )}
     </>
   );
 }

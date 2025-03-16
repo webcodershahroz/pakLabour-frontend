@@ -20,6 +20,7 @@ function Dashboard() {
 
   useEffect(() => {
     setUserDetails(decodeJwtToken());
+    console.log(decodeJwtToken()._id)
       //  updateWorkerAnalytics({orderCompleted:30, averageRating:4.5})
       
   }, []);

@@ -3,6 +3,7 @@ import { jwtDecode } from "jwt-decode";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { StateContext } from "../../context/StateContext";
 import Alert from "../utils/Alert";
+import ActivityIndicator from "../utils/ActivityIndicator";
 
 function WorkersDetail() {
   const [isLoading, setIsLoading] = useState(false);
@@ -34,7 +35,6 @@ function WorkersDetail() {
 
   //function that gets the worker details
   const getWorkerDetails = () => {
-    setIsLoading(true);
     try {
       fetch(`http://localhost:2000/worker/get-worker/${idParams}`).then(
         async (res) => {
@@ -43,9 +43,7 @@ function WorkersDetail() {
           setIsLoading(false);
         }
       );
-    } catch (error) {
-      setIsLoading(false);
-    }
+    } catch (error) {}
   };
 
   //function to post review message
@@ -96,12 +94,11 @@ function WorkersDetail() {
           if (res.status === 200) {
             const data = await res.json();
             setWorkerReviews(data.data);
+            setIsLoading(false);
           }
         }
       );
-    } catch (error) {
-      setIsLoading(false);
-    }
+    } catch (error) {}
   };
 
   //function to handle post comments button click
@@ -120,7 +117,7 @@ function WorkersDetail() {
 
   useEffect(() => {
     if (isUserLoggedIn()) {
-      setUserDetails(decodeJwtToken());
+      setUserDetails(decodeJwtToken()); 
     }
     getWorkerDetails();
     getWorkerReviews();
@@ -129,7 +126,7 @@ function WorkersDetail() {
   return (
     <>
       {isAlertVisible && <Alert alertData={alertData} />}
-      {workerDetails && workerDetails.user && (
+      {workerDetails && workerDetails.user ? (
         <div>
           <div class="container mx-auto px-4 py-8">
             <p className="text-md mb-2 ml-1">
@@ -200,7 +197,15 @@ function WorkersDetail() {
                 </p>
                 {isUserLoggedIn() && userDetails.type === "postWork" ? (
                   <button
-                    onClick={() => navigate("/hire-worker")}
+                    onClick={() => {
+                      const params = new URLSearchParams();
+                      params.append("pid", idParams);
+                      params.append("tagline", workerDetails.workerTagline);
+                      params.append("wid", workerDetails.user._id);
+                      params.append("uid", userDetails._id);
+
+                      navigate(`/hire-worker?${params.toString()}`);
+                    }}
                     type="button"
                     class="text-white bg-black  font-medium rounded-lg px-5 py-2.5 me-2"
                   >
@@ -270,6 +275,8 @@ function WorkersDetail() {
             </div>
           </div>
         </div>
+      ) : (
+        <ActivityIndicator />
       )}
     </>
   );

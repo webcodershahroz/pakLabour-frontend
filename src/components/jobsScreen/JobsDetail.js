@@ -5,12 +5,13 @@ import { StateContext } from "../../context/StateContext";
 
 function JobsDetail() {
   const [searchParams] = useSearchParams();
-  const [jobDetails, setJobDetails] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
   const titleParam = searchParams.get("title");
   const idParam = searchParams.get("id");
   const typeParam = searchParams.get("type");
+  const [jobDetails, setJobDetails] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const [photoCarousalIndex, setPhotoCarousalIndex] = useState(0);
   const { isUserLoggedIn, decodeJwtToken } = useContext(StateContext);
   const [userDetails, setUserDetails] = useState({
     name: "",
@@ -24,8 +25,14 @@ function JobsDetail() {
     params.append("title", titleParam);
     params.append("type", type);
     params.append("id", idParam);
+    params.append("ref", "my-jobs");
 
     navigate(`/job?${params.toString()}`);
+  };
+
+  const handleCarousalNavigation = () => {
+    // if(photoCarousalIndex )
+    console.log(photoCarousalIndex);
   };
 
   const getJobDetails = () => {
@@ -38,7 +45,7 @@ function JobsDetail() {
             console.log(data);
             setJobDetails(data.jobs[0]);
           }
-          
+
           setIsLoading(false);
         }
       );
@@ -103,9 +110,7 @@ function JobsDetail() {
                 </div>
                 <div class="flex flex-wrap -mx-4">
                   <div class="md:w-3/4 px-4">
-                    <h2 class="text-3xl font-bold mb-2">
-                      {jobDetails.title}
-                    </h2>
+                    <h2 class="text-3xl font-bold mb-2">{jobDetails.title}</h2>
                     <div>
                       <h2 className="font-bold text-gray-600">
                         About the job:
@@ -120,12 +125,78 @@ function JobsDetail() {
                         PKR {jobDetails.price}
                       </p>
                     </div>
+                    <div>
+                      <h2 className="font-bold text-gray-600">Work photo</h2>
+                      <div className="flex flex-col items-center border border-2 border-gray-200 rounded-md my-4">
+                        <div
+                          id="controls-carousel"
+                          class="relative w-full"
+                        >
+                          <div class="relative h-56 overflow-hidden rounded-lg md:h-96">
+                            <div
+                              class="duration-700 ease-in-out"
+                              data-carousel-item
+                            >
+                              <img
+                                src={`http://localhost:2000/${jobDetails.pictures[photoCarousalIndex]}`}
+                                class="object-contain h-full absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
+                                alt="..."
+                              />
+                            </div>
+                          </div>
+                          <button
+                            onClick={() => {
+                              setPhotoCarousalIndex((prev) => --prev);
+                            }}
+                            disabled={photoCarousalIndex === 0}
+                            type="button"
+                            class="absolute top-0 start-0 z-30 h-full px-4 cursor-pointer"
+                            data-carousel-prev
+                          >
+                            <i class="fa-solid fa-arrow-left border border-2 border-gray-500 p-3 rounded-full"></i>
+                          </button>
+                          <button
+                            onClick={() => {
+                              setPhotoCarousalIndex((prev) => ++prev);
+                            }}
+                            disabled={
+                              photoCarousalIndex ===
+                              jobDetails.pictures.length - 1
+                            }
+                            type="button"
+                            class="absolute top-0 end-0 z-30 h-full px-4 cursor-pointer"
+                            data-carousel-next
+                          >
+                            <i class="fa-solid fa-arrow-right border border-2 border-gray-500 p-3 rounded-full "></i>
+                          </button>
+                        </div>
+                        <div>
+                          {`${photoCarousalIndex + 1}/${
+                            jobDetails.pictures.length
+                          }`}
+                        </div>
+                        {/* <div className="flex gap-2 flex-wrap mt-3">
+                          {jobDetails.pictures.map((pu) => {
+                            return (
+                              <img
+                                src={`http://localhost:2000/${pu}`}
+                                className="object-contain"
+                                height={100}
+                                width={100}
+                                alt="d"
+                              />
+                            );
+                          })}
+                        </div> */}
+                      </div>
+                    </div>
+
                     {isUserLoggedIn() && userDetails.type === "worker" ? (
                       <button
                         onClick={() => {
                           const params = new URLSearchParams();
-                          params.append("title", "Job title");
-                          params.append("id", "4935kafjl2hda23");
+                          params.append("title", titleParam);
+                          params.append("id", idParam);
 
                           navigate(`/apply-now?${params.toString()}`);
                         }}
@@ -141,6 +212,7 @@ function JobsDetail() {
                       </p>
                     )}
                   </div>
+
                   <aside className="h-fit border p-3 m-3">
                     <h2 className="font-bold">About the client:</h2>
                     <div class="flex mb-4 gap-2 flex-col">

@@ -50,12 +50,20 @@ function Navbar() {
               {isUserLoggedIn() ? "Dashboard" : "Home"}
             </Link>
             {isUserLoggedIn() && userDetails.type === "postWork" ? (
+              <>
               <Link
                 to="/my-jobs"
                 className="hover:underline decoration-brandcolor decoration-2 underline-offset-4 mr-7"
               >
                 My jobs
               </Link>
+              <Link
+                to="/my-orders"
+                className="hover:underline decoration-brandcolor decoration-2 underline-offset-4 mr-7"
+              >
+                Orders
+              </Link>
+              </>
             ) : (
               <>
                 <div>
@@ -88,11 +96,22 @@ function Navbar() {
                     <li
                       onClick={() => {
                         navigate('/my-profile')
+                        setShowDropDown((prev) => !prev)
                       }}
                       role="menuitem"
                       class="cursor-pointer text-slate-800 text-sm flex w-full items-center rounded-md p-3 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 text-red-500"
                     >
                       <p className="ml-2">My profiles</p>
+                    </li>
+                    <li
+                      onClick={() => {
+                        navigate('/my-orders')
+                        setShowDropDown((prev) => !prev)
+                      }}
+                      role="menuitem"
+                      class="cursor-pointer text-slate-800 text-sm flex w-full items-center rounded-md p-3 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 text-red-500"
+                    >
+                      <p className="ml-2">Orders</p>
                     </li>
                   </ul>
                 </div>
