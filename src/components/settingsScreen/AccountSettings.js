@@ -91,19 +91,19 @@ function ProfileSettings() {
     <>
       {isAlertVisible && <Alert alertData={alertData} />}
 
-      <div class="p-2 md:p-4 relative">
-        <div class="w-full px-6 pb-8 mt-8 sm:max-w-xl sm:rounded-lg">
-          <h2 class="pl-6 text-2xl font-bold sm:text-xl">Account</h2>
+      <div className="p-2 md:p-4 relative">
+        <div className="w-full px-6 pb-8 mt-8 sm:max-w-xl sm:rounded-lg">
+          <h2 className="pl-6 text-2xl font-bold sm:text-xl">Account</h2>
 
-          <div class="grid max-w-2xl mx-auto mt-8">
-            <div class="flex flex-col items-center space-y-5 sm:flex-row sm:space-y-0">
+          <div className="grid max-w-2xl mx-auto mt-8">
+            <div className="flex flex-col items-center space-y-5 sm:flex-row sm:space-y-0">
               <img
-                class="object-contain w-40 h-40 p-1 rounded-full ring-2 ring-brandcolor"
+                className="object-contain w-40 h-40 p-1 rounded-full ring-2 ring-brandcolor"
                 src={isUpdating?previewUrl:`http://localhost:2000/${pictureUrl}`}
                 alt=""
               />
 
-              <div class="flex flex-col space-y-5 sm:ml-8 ">
+              <div className="flex flex-col space-y-5 sm:ml-8 ">
                 <div>
                   <p className="font-bold text-2xl">Muhammad Shahroz Shahzad</p>
                   <p>shahrozshahzad17@gmail.com</p>
@@ -111,7 +111,7 @@ function ProfileSettings() {
                 <input onChange={handleFileInputChange} type="file"></input>
                 <button
                   onClick={handleChangePictureButtonClick}
-                  class={`text-white  font-medium rounded-lg px-5 py-2.5 absolute right-5 bottom-4  
+                  className={`text-white  font-medium rounded-lg px-5 py-2.5 absolute right-5 bottom-4  
                     ${
                       isLoading || !isUpdating ? "cursor-not-allowed bg-gray-400" : "bg-black"
                     }`}

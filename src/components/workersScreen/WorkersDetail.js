@@ -115,6 +115,40 @@ function WorkersDetail() {
     }
   };
 
+  //handle click on message button 
+  const handleMessageButtonClick = async ()=>{
+    const userId = await decodeJwtToken()._id;
+    const payload = {
+      userId,
+      newContact : workerDetails.user._id ,
+      contactAnalytics : workerDetails.workerAnalytics._id
+    };
+    setIsLoading(true);
+    fetch("http://localhost:2000/message/add-user-contact", {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then(async(res)=>{
+      const data = await res.json()
+      console.log(data)
+      if(data.success){
+
+        navigate('/message')
+      }  
+      else{
+        setAlertData({
+          title: "Error",
+          message: "Something went wrong, try again",
+          type: "error",
+        });
+        setIsAlertVisible(true);
+        hideAlert();
+      }
+    })
+  }
+  
   useEffect(() => {
     if (isUserLoggedIn()) {
       setUserDetails(decodeJwtToken()); 
@@ -128,33 +162,33 @@ function WorkersDetail() {
       {isAlertVisible && <Alert alertData={alertData} />}
       {workerDetails && workerDetails.user ? (
         <div>
-          <div class="container mx-auto px-4 py-8">
+          <div className="container mx-auto px-4 py-8">
             <p className="text-md mb-2 ml-1">
               <span className="font-bold">Category: </span>
               {workerDetails.workerCategory}
             </p>
-            <div class="flex flex-wrap -mx-4">
-              <div class="w-full md:w-1/2 px-4 mb-8">
+            <div className="flex flex-wrap -mx-4">
+              <div className="w-full md:w-1/2 px-4 mb-8">
                 <img
                   src={`http://localhost:2000/${workerDetails.workerPicture}`}
                   alt="Product"
-                  class="w-full h-auto rounded-lg shadow-md mb-4"
+                  className="w-full h-auto rounded-lg shadow-md mb-4"
                   id="mainImage"
                 />
               </div>
 
-              <div class="w-full md:w-1/2 px-4">
-                <h2 class="text-3xl font-bold mb-2">
+              <div className="w-full md:w-1/2 px-4">
+                <h2 className="text-3xl font-bold mb-2">
                   {workerDetails.workerTagline}
                 </h2>
-                <div class="flex mb-4 items-center gap-2">
+                <div className="flex mb-4 items-center gap-2">
                   <img
                     src={`http://localhost:2000/${workerDetails.user.picture}`}
                     alt="User Avatar"
-                    class="w-10 h-10 rounded-full"
+                    className="w-10 h-10 rounded-full"
                   />
                   <div>
-                    <p class="text-gray-700">{workerDetails.user.name}</p>
+                    <p className="text-gray-700">{workerDetails.user.name}</p>
                     <p className="text-xs">
                       Last active :{" "}
                       {workerDetails.workerAnalytics.lastActive || "Not Known"}
@@ -169,12 +203,12 @@ function WorkersDetail() {
                     {workerDetails.user.location || "Unknown"}
                   </p>
                 </div>
-                <div class="flex items-center mb-4">
+                <div className="flex items-center mb-4">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                     fill="currentColor"
-                    class="size-6 text-yellow-500"
+                    className="size-6 text-yellow-500"
                   >
                     <path
                       fill-rule="evenodd"
@@ -182,20 +216,21 @@ function WorkersDetail() {
                       clip-rule="evenodd"
                     />
                   </svg>
-                  <span class="ml-2 text-gray-600">
+                  <span className="ml-2 text-gray-600">
                     {workerDetails.workerAnalytics.averageRating || 0} (
                     {workerReviews.length} Review)
                   </span>
                   <span className="font-bold text-xl ml-2">.</span>
-                  <span class="ml-2 text-gray-600">
+                  <span className="ml-2 text-gray-600">
                     {workerDetails.workerAnalytics.orderCompleted || 0} Orders
                     completed
                   </span>
                 </div>
-                <p class="text-gray-700 mb-6">
+                <p className="text-gray-700 mb-6">
                   {workerDetails.workerDescription}
                 </p>
                 {isUserLoggedIn() && userDetails.type === "postWork" ? (
+                  <>
                   <button
                     onClick={() => {
                       const params = new URLSearchParams();
@@ -207,10 +242,19 @@ function WorkersDetail() {
                       navigate(`/hire-worker?${params.toString()}`);
                     }}
                     type="button"
-                    class="text-white bg-black  font-medium rounded-lg px-5 py-2.5 me-2"
+                    className="text-white bg-black font-medium rounded-lg px-5 py-2.5 me-2"
                   >
                     Hire now
                   </button>
+                  <button
+                    onClick={handleMessageButtonClick}
+                    type="button"
+                    className="text-black bg-brandcolor  font-medium rounded-lg px-5 py-2.5 me-2"
+                  >
+                    Message
+                  </button>
+                  </>
+
                 ) : (
                   <p>
                     <span className="font-bold">Note:</span> Only post work
@@ -220,32 +264,32 @@ function WorkersDetail() {
               </div>
             </div>
 
-            <div class="w-full max-w-7xl px-4 md:px-5 lg:px-5 mx-auto">
-              <div class="w-full flex-col justify-start items-start lg:gap-10 gap-3 inline-flex">
-                <h2 class="text-gray-900 text-3xl font-bold font-manrope leading-normal">
+            <div className="w-full max-w-7xl px-4 md:px-5 lg:px-5 mx-auto">
+              <div className="w-full flex-col justify-start items-start lg:gap-10 gap-3 inline-flex">
+                <h2 className="text-gray-900 text-3xl font-bold font-manrope leading-normal">
                   {workerReviews.length} Reviews
                 </h2>
                 {workerReviews.map((review) => {
                   return (
-                    <div class="w-full flex-col justify-start items-start gap-3 flex">
-                      <div class="justify-start items-center gap-2.5 flex">
-                        <div class="w-10 h-10 bg-gray-300 rounded-full justify-start items-start gap-2.5 flex">
+                    <div className="w-full flex-col justify-start items-start gap-3 flex">
+                      <div className="justify-start items-center gap-2.5 flex">
+                        <div className="w-10 h-10 bg-gray-300 rounded-full justify-start items-start gap-2.5 flex">
                           <img
-                            class="rounded-full object-cover"
+                            className="rounded-full object-cover"
                             src={`http://localhost:2000/${review.user.picture}`}
                             alt="UP"
                           />
                         </div>
-                        <div class="flex-col justify-start items-start gap-1 inline-flex">
-                          <h5 class="text-gray-900 text-sm font-semibold leading-snug">
+                        <div className="flex-col justify-start items-start gap-1 inline-flex">
+                          <h5 className="text-gray-900 text-sm font-semibold leading-snug">
                             {review.user.name}
                           </h5>
-                          <h6 class="text-gray-500 text-xs font-normal leading-5">
+                          <h6 className="text-gray-500 text-xs font-normal leading-5">
                             {review.createdAt}
                           </h6>
                         </div>
                       </div>
-                      <p class="text-gray-800 text-sm font-normal leading-snug">
+                      <p className="text-gray-800 text-sm font-normal leading-snug">
                         {review.reviewMessage}
                       </p>
                       <hr />
@@ -254,12 +298,12 @@ function WorkersDetail() {
                 })}
               </div>
               <div className="mt-5">
-                <div class="py-2 px-4 mb-4 rounded-lg rounded-t-lg border w-full">
+                <div className="py-2 px-4 mb-4 rounded-lg rounded-t-lg border w-full">
                   <textarea
                     onChange={(e) => setReviewMessage(e.target.value)}
                     id="comment"
                     rows="6"
-                    class="px-0 w-full text-sm text-gray-900 outline-none"
+                    className="px-0 w-full text-sm text-gray-900 outline-none"
                     placeholder="Write a comment..."
                     required
                   ></textarea>

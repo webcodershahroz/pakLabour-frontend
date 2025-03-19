@@ -66,7 +66,7 @@ function Workers() {
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                     fill="currentColor"
-                    class="size-6 text-yellow-500"
+                    className="size-6 text-yellow-500"
                   >
                     <path
                       fill-rule="evenodd"

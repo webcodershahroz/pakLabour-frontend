@@ -3,13 +3,13 @@ import React from "react";
 function NotificationSettings() {
   return (
     <>
-      <div class="p-2 md:p-4">
-        <div class="w-full px-6 pb-8 mt-8 sm:max-w-xl sm:rounded-lg">
-          <h2 class="text-2xl font-bold sm:text-xl">Notification</h2>
+      <div className="p-2 md:p-4">
+        <div className="w-full px-6 pb-8 mt-8 sm:max-w-xl sm:rounded-lg">
+          <h2 className="text-2xl font-bold sm:text-xl">Notification</h2>
           <p className="text-sm">For imprtant information PakLabour send you notifications</p>
 
-          <div class="grid max-w-2xl mx-auto mt-8">
-            <div class="flex flex-col items-center space-y-5 sm:flex-row sm:space-y-0">
+          <div className="grid max-w-2xl mx-auto mt-8">
+            <div className="flex flex-col items-center space-y-5 sm:flex-row sm:space-y-0">
                 <div className="flex items-center">
                     <input id="email-notifications" type="checkbox" />
                     <label className="pl-2 text-sm" htmlFor="email-notifications">Send emails</label>

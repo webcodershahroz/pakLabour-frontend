@@ -73,7 +73,7 @@ function Navbar() {
                   >
                     <p>My business</p>
                     <svg
-                      class="w-2.5 h-2.5 ms-3"
+                      className="w-2.5 h-2.5 ms-3"
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -91,7 +91,7 @@ function Navbar() {
                   <ul
                     role="menu"
                     hidden={!showDropDown}
-                    class="absolute z-10 min-w-[180px] overflow-auto rounded-lg border border-slate-200 bg-white p-1.5 shadow-lg shadow-sm focus:outline-none"
+                    className="absolute z-10 min-w-[180px] overflow-auto rounded-lg border border-slate-200 bg-white p-1.5 shadow-lg shadow-sm focus:outline-none"
                   >
                     <li
                       onClick={() => {
@@ -99,7 +99,7 @@ function Navbar() {
                         setShowDropDown((prev) => !prev)
                       }}
                       role="menuitem"
-                      class="cursor-pointer text-slate-800 text-sm flex w-full items-center rounded-md p-3 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 text-red-500"
+                      className="cursor-pointer text-slate-800 text-sm flex w-full items-center rounded-md p-3 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 text-red-500"
                     >
                       <p className="ml-2">My profiles</p>
                     </li>
@@ -109,7 +109,7 @@ function Navbar() {
                         setShowDropDown((prev) => !prev)
                       }}
                       role="menuitem"
-                      class="cursor-pointer text-slate-800 text-sm flex w-full items-center rounded-md p-3 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 text-red-500"
+                      className="cursor-pointer text-slate-800 text-sm flex w-full items-center rounded-md p-3 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 text-red-500"
                     >
                       <p className="ml-2">Orders</p>
                     </li>
@@ -174,7 +174,7 @@ function Navbar() {
                   <ul
                     role="menu"
                     hidden={!showProfileMenu}
-                    class="absolute z-10 min-w-[180px] overflow-auto rounded-lg border border-slate-200 bg-white p-1.5 shadow-lg shadow-sm focus:outline-none right-6"
+                    className="absolute z-10 min-w-[180px] overflow-auto rounded-lg border border-slate-200 bg-white p-1.5 shadow-lg shadow-sm focus:outline-none right-6"
                   >
                     <li
                       onClick={() => {
@@ -183,9 +183,9 @@ function Navbar() {
                         navigate(`/settings?${params.toString()}`);
                       }}
                       role="menuitem"
-                      class="cursor-pointer text-slate-800 text-sm flex w-full items-center rounded-md p-3 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100"
+                      className="cursor-pointer text-slate-800 text-sm flex w-full items-center rounded-md p-3 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100"
                     >
-                      <i class="fa fa-user" aria-hidden="true"></i>
+                      <i className="fa fa-user" aria-hidden="true"></i>
                       <p className="ml-2">Profile</p>
                     </li>
                     <li
@@ -193,9 +193,9 @@ function Navbar() {
                         logout();
                       }}
                       role="menuitem"
-                      class="cursor-pointer text-slate-800 text-sm flex w-full items-center rounded-md p-3 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 text-red-500"
+                      className="cursor-pointer text-slate-800 text-sm flex w-full items-center rounded-md p-3 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 text-red-500"
                     >
-                      <i class="fa fa-sign-out" aria-hidden="true"></i>
+                      <i className="fa fa-sign-out" aria-hidden="true"></i>
                       <p className="ml-2 text-red-600">Logout</p>
                     </li>
                   </ul>

@@ -91,7 +91,7 @@ function JobsDetail() {
           </div>
           {typeParam === "job-details" ? (
             <>
-              <div class="container mx-auto px-4 py-8">
+              <div className="container mx-auto px-4 py-8">
                 <div className="text-md mb-2 flex gap-2 ">
                   <span className="font-bold">Categories: </span>
                   <div>
@@ -108,20 +108,20 @@ function JobsDetail() {
                       })}
                   </div>
                 </div>
-                <div class="flex flex-wrap -mx-4">
-                  <div class="md:w-3/4 px-4">
-                    <h2 class="text-3xl font-bold mb-2">{jobDetails.title}</h2>
+                <div className="flex flex-wrap -mx-4">
+                  <div className="md:w-3/4 px-4">
+                    <h2 className="text-3xl font-bold mb-2">{jobDetails.title}</h2>
                     <div>
                       <h2 className="font-bold text-gray-600">
                         About the job:
                       </h2>
-                      <p class="text-gray-700 text-justify">
+                      <p className="text-gray-700 text-justify">
                         {jobDetails.description}
                       </p>
                     </div>
                     <div className="border px-10 py-5 rounded-lg w-fit my-3">
                       <h2 className="font-bold text-gray-600">Price:</h2>
-                      <p class="text-gray-700 text-justify">
+                      <p className="text-gray-700 text-justify">
                         PKR {jobDetails.price}
                       </p>
                     </div>
@@ -130,16 +130,16 @@ function JobsDetail() {
                       <div className="flex flex-col items-center border border-2 border-gray-200 rounded-md my-4">
                         <div
                           id="controls-carousel"
-                          class="relative w-full"
+                          className="relative w-full"
                         >
-                          <div class="relative h-56 overflow-hidden rounded-lg md:h-96">
+                          <div className="relative h-56 overflow-hidden rounded-lg md:h-96">
                             <div
-                              class="duration-700 ease-in-out"
+                              className="duration-700 ease-in-out"
                               data-carousel-item
                             >
                               <img
                                 src={`http://localhost:2000/${jobDetails.pictures[photoCarousalIndex]}`}
-                                class="object-contain h-full absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
+                                className="object-contain h-full absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
                                 alt="..."
                               />
                             </div>
@@ -150,10 +150,10 @@ function JobsDetail() {
                             }}
                             disabled={photoCarousalIndex === 0}
                             type="button"
-                            class="absolute top-0 start-0 z-30 h-full px-4 cursor-pointer"
+                            className="absolute top-0 start-0 z-30 h-full px-4 cursor-pointer"
                             data-carousel-prev
                           >
-                            <i class="fa-solid fa-arrow-left border border-2 border-gray-500 p-3 rounded-full"></i>
+                            <i className="fa-solid fa-arrow-left border border-2 border-gray-500 p-3 rounded-full"></i>
                           </button>
                           <button
                             onClick={() => {
@@ -164,10 +164,10 @@ function JobsDetail() {
                               jobDetails.pictures.length - 1
                             }
                             type="button"
-                            class="absolute top-0 end-0 z-30 h-full px-4 cursor-pointer"
+                            className="absolute top-0 end-0 z-30 h-full px-4 cursor-pointer"
                             data-carousel-next
                           >
-                            <i class="fa-solid fa-arrow-right border border-2 border-gray-500 p-3 rounded-full "></i>
+                            <i className="fa-solid fa-arrow-right border border-2 border-gray-500 p-3 rounded-full "></i>
                           </button>
                         </div>
                         <div>
@@ -201,7 +201,7 @@ function JobsDetail() {
                           navigate(`/apply-now?${params.toString()}`);
                         }}
                         type="button"
-                        class="text-white bg-black  font-medium rounded-lg px-5 py-2.5 me-2"
+                        className="text-white bg-black  font-medium rounded-lg px-5 py-2.5 me-2"
                       >
                         Apply now
                       </button>
@@ -215,14 +215,14 @@ function JobsDetail() {
 
                   <aside className="h-fit border p-3 m-3">
                     <h2 className="font-bold">About the client:</h2>
-                    <div class="flex mb-4 gap-2 flex-col">
+                    <div className="flex mb-4 gap-2 flex-col">
                       <div className="flex items-center">
                         <img
                           src={`http://localhost:2000/${jobDetails.user.picture}`}
                           alt="User Avatar"
-                          class="w-8 h-8 rounded-full"
+                          className="w-8 h-8 rounded-full"
                         />
-                        <p class="text-gray-700">{jobDetails.user.name}</p>
+                        <p className="text-gray-700">{jobDetails.user.name}</p>
                       </div>
 
                       <div>
