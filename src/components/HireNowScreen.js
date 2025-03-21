@@ -80,6 +80,7 @@ function HireNowScreen() {
       uid,
       wid: widParam,
       pid: pidParam,
+      jobId : selectedJob._id || Math.floor(Math.random()*99999),
       jobTitle: workerHireData.title,
       jobDescription: workerHireData.description,
       jobLocation: workerHireData.location,

@@ -28,6 +28,8 @@ import ApplyNowScreen from "./components/ApplyNowScreen";
 import CreateWorkerProfile from "./components/workersScreen/CreateWorkerProfile";
 import WorkerProfiles from "./components/workersScreen/WorkerProfiles";
 import WorkerOrders from "./components/workersScreen/WorkerOrders";
+import MakeTransaction from "./components/transaction/MakeTransaction";
+import GiveReview from "./components/transaction/GiveReview";
 
 //function that chect if user is logged in or not
 const isUserLoggedIn = () => {
@@ -157,6 +159,24 @@ function App() {
             element={
               <PrivateRoutes>
                 <WorkerOrders />
+              </PrivateRoutes>
+            }
+          />
+
+          <Route
+            path="/make-transaction"
+            element={
+              <PrivateRoutes>
+                <MakeTransaction />
+              </PrivateRoutes>
+            }
+          />
+
+          <Route
+            path="/give-review"
+            element={
+              <PrivateRoutes>
+                < GiveReview />
               </PrivateRoutes>
             }
           />

@@ -26,8 +26,6 @@ function Message() {
   };
   //get all messages of user
   const getUserMessages = async () => {
-    console.log(selectedChat.conId)
-    console.log(selectedChat)
     setIsLoading(true);
     fetch(
       `http://localhost:2000/message/get-messages/${selectedChat.conId}`
@@ -41,7 +39,7 @@ function Message() {
 
   //handle clicked on chat
   const handleClickOnChats = (contact) => {
-   setSelectedChat({
+    setSelectedChat({
       conId: getConId(contact.userId, contact.contact._id),
       userId: contact.userId,
       reciverId: contact.contact._id,
@@ -58,11 +56,14 @@ function Message() {
   };
 
   const handleSendButtonClick = async () => {
+    const d = new Date();
+    const time = `${d.getHours()}:${d.getMinutes()}`;
     const payload = {
-      conId: getConId(selectedChat.userId, selectedChat.contact._id),
+      conId: getConId(selectedChat.userId, selectedChat.reciverId),
       sender: await decodeJwtToken()._id,
-      reciver: selectedChat.contact._id,
+      reciver: selectedChat.reciverId,
       message: inputMessage,
+      time,
     };
     console.log(payload);
     //save message
@@ -74,6 +75,7 @@ function Message() {
       },
     }).then(async (res) => {
       const data = await res.json();
+
       const renderPayload = {
         ...payload,
         sender: {
@@ -87,10 +89,9 @@ function Message() {
   };
 
   //get messages of selected chat
-  useEffect(()=>{
-    if(selectedChat)
-      getUserMessages()
-  },[selectedChat])
+  useEffect(() => {
+    if (selectedChat) getUserMessages();
+  }, [selectedChat]);
 
   useEffect(() => {
     getUserContacts();
@@ -162,10 +163,13 @@ function Message() {
                 ) : (
                   userMessages.map((message) => {
                     return message.sender._id === decodeJwtToken()._id ? (
-                      <div className="flex justify-end mb-2 cursor-pointer">
-                        <p className="max-w-96 bg-brandcolor text-md px-3 text-black rounded-md">
-                          {message.message}
-                        </p>
+                      <div className="flex justify-end mb-2">
+                        <div className="max-w-96 bg-brandcolor text-md px-3 text-black rounded-md pr-10 relative">
+                          <p>{message.message}</p>
+                          <p className="text-xs text-gray-600 absolute bottom-0 right-1">
+                            {message.time}
+                          </p>
+                        </div>
                         <div className="rounded-full ml-2">
                           <img
                             src={`http://localhost:2000/${message.sender.picture}`}
@@ -175,16 +179,19 @@ function Message() {
                         </div>
                       </div>
                     ) : (
-                      <div className="flex mb-4 cursor-pointer">
-                        <div className="w-9 h-9 rounded-full flex items-center justify-center mr-2">
+                      <div className="flex mb-2">
+                        <div className="rounded-full ml-2">
                           <img
-                            src={`http://localhost:2000/${message.reciver.picture}`}
+                            src={`http://localhost:2000/${message.sender.picture}`}
                             alt="User Avatar"
-                            className="w-8 h-8 rounded-full"
+                            className="w-6 h-6 rounded-full"
                           />
                         </div>
-                        <div className="flex max-w-96 bg-white rounded-lg p-3 gap-3">
-                          <p className="text-gray-700">{message.message}</p>
+                        <div className="max-w-96 bg-gray-200 text-md px-3 text-black rounded-md pr-10 relative">
+                          <p>{message.message}</p>
+                          <p className="text-xs text-gray-600 absolute bottom-0 right-1">
+                            {message.time}
+                          </p>
                         </div>
                       </div>
                     );
@@ -223,6 +230,7 @@ function Message() {
           )}
         </div>
       </div>
+
     </>
   );
 }

@@ -125,10 +125,11 @@ export function StateContextProvider({ children }) {
   //function to update worker analytics
   const updateWorkerAnalytics = async (data) => {
     const payload = {
-      user: decodeJwtToken()._id,
+      user: data.user,
       orderCompleted :data.orderCompleted,
       averageRating : data.averageRating
     }
+    console.log(payload)
     try {
       fetch(`http://localhost:2000/worker/update-analytics`, {
         method: "POST",

@@ -80,6 +80,17 @@ function WorkerOrders() {
     }
   };
 
+  const handleClickOnOrder = (order) => {
+    if (decodeJwtToken().type === "postWork") {
+      const params = new URLSearchParams();
+      params.append("wid", order.wid._id);
+      params.append("pid", order.pid._id);
+      params.append("uid", order.uid._id);
+
+      navigate(`/make-transaction?${params.toString()}`, { state: order });
+    }
+  };
+
   useEffect(() => {
     const type = decodeJwtToken().type;
     if (type === "worker") getWorkerOrders();
@@ -93,12 +104,6 @@ function WorkerOrders() {
       <div>
         <div className="flex justify-between items-center my-10">
           <strong className="font-bold text-3xl block ml-24">My Orders</strong>
-          {/* <Link
-            to={"/create-worker-profile"}
-            className="bg-brandcolor text-lg rounded-full px-3 py-1 mr-24"
-          >
-            Create a worker profile
-          </Link> */}
         </div>
         <div className="container mx-auto mb-10">
           {isLoading ? (
@@ -129,7 +134,9 @@ function WorkerOrders() {
                         Profile
                       </th>
                       <th className="px-6 py-3 font-medium text-base">
-                        {decodeJwtToken().type === "postWork" ? "Worker" :'Client'}
+                        {decodeJwtToken().type === "postWork"
+                          ? "Worker"
+                          : "Client"}
                       </th>
                       <th className="px-6 py-3 font-medium text-base">Title</th>
                       <th className="px-6 py-3 font-medium text-base">
@@ -151,6 +158,9 @@ function WorkerOrders() {
                       return (
                         <>
                           <tr
+                            onClick={() => {
+                              handleClickOnOrder(order);
+                            }}
                             key={order._id}
                             className="bg-white border-b hover:bg-stone-100 cursor-pointer"
                           >
@@ -196,7 +206,7 @@ function WorkerOrders() {
                             <td className="px-6 py-4">{order.jobEndTime}</td>
                             <td className="px-6 py-4">{order.jobLocation}</td>
                             <td className="px-6 py-4">
-                              <p className="bg-[#F7CB73] px-3 py-1 rounded-lg w-fit">
+                              <p className={`${order.jobStatus === "Pending" ?"bg-[#F7CB73]":"bg-green-400"} px-3 py-1 rounded-lg w-fit`}>
                                 {order.jobStatus}
                               </p>
                             </td>
