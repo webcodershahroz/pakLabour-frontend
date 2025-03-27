@@ -8,6 +8,8 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 import SearchResults from "./components/SearchResults";
 import Jobs from "./components//jobsScreen/Jobs";
 import Workers from "./components/workersScreen/Workers";
@@ -30,7 +32,12 @@ import WorkerProfiles from "./components/workersScreen/WorkerProfiles";
 import WorkerOrders from "./components/workersScreen/WorkerOrders";
 import MakeTransaction from "./components/transaction/MakeTransaction";
 import GiveReview from "./components/transaction/GiveReview";
+import WorkerAppliedJobs from "./components/workersScreen/WorkerAppliedJobs";
 
+// Load Stripe using your public key
+const stripePromise = loadStripe(
+  "pk_test_51R7Jv3PIp1oj547x1KUltWooU6EFlYoRvl5sQ0Ktm9Q8Q8JfKr4iPM8gFXipmNwjSTGoLnzlrZKL087H9BqwR7Zl00mV18mCUT"
+);
 //function that chect if user is logged in or not
 const isUserLoggedIn = () => {
   let isLoggedIn = localStorage.getItem("token");
@@ -155,6 +162,15 @@ function App() {
           />
 
           <Route
+            path="/my-applied-jobs"
+            element={
+              <PrivateRoutes>
+                <WorkerAppliedJobs />
+              </PrivateRoutes>
+            }
+          />
+
+          <Route
             path="/my-orders"
             element={
               <PrivateRoutes>
@@ -167,7 +183,9 @@ function App() {
             path="/make-transaction"
             element={
               <PrivateRoutes>
-                <MakeTransaction />
+                <Elements stripe={stripePromise}>
+                  <MakeTransaction />
+                </Elements>
               </PrivateRoutes>
             }
           />
@@ -176,7 +194,7 @@ function App() {
             path="/give-review"
             element={
               <PrivateRoutes>
-                < GiveReview />
+                <GiveReview />
               </PrivateRoutes>
             }
           />

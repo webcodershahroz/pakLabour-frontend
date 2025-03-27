@@ -22,6 +22,7 @@ function PostJob() {
     title: "",
     description: "",
     price: "",
+    location: "",
     searchTags: "",
   });
 
@@ -53,6 +54,7 @@ function PostJob() {
     formData.append("title", jobData.title);
     formData.append("description", jobData.description);
     formData.append("price", jobData.price);
+    formData.append("location", jobData.location);
     formData.append("searchTags", jobData.searchTags);
 
     if (pictureUrl) pictureUrl.forEach(picture => formData.append('pictures',picture))
@@ -219,6 +221,26 @@ function PostJob() {
                     type="text"
                     name="searchTags"
                     id="searchTags"
+                    className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="sm:col-span-4">
+              <label
+                htmlFor="tags"
+                className="block text-sm/6 font-medium text-gray-900"
+              >
+                Location
+              </label>
+              <div className="mt-2">
+                <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-brandcolor">
+                  <input
+                    onChange={handleTextInputChange}
+                    placeholder="Dina"
+                    type="text"
+                    name="location"
+                    id="location"
                     className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
                   />
                 </div>

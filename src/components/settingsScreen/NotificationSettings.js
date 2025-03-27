@@ -11,7 +11,7 @@ function NotificationSettings() {
           <div className="grid max-w-2xl mx-auto mt-8">
             <div className="flex flex-col items-center space-y-5 sm:flex-row sm:space-y-0">
                 <div className="flex items-center">
-                    <input id="email-notifications" type="checkbox" />
+                    <input id="email-notifications" type="checkbox" checked />
                     <label className="pl-2 text-sm" htmlFor="email-notifications">Send emails</label>
                 </div>
             </div>

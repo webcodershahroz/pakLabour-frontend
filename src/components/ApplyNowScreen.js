@@ -59,7 +59,7 @@ function ApplyNowScreen() {
         });
         setIsAlertVisible(true);
         hideAlert();
-        navigate('/my-profile')
+        navigate('/my-applied-jobs')
       } else {
         setAlertData({
           title: "Error",
@@ -223,7 +223,7 @@ function ApplyNowScreen() {
               isLoading ? "cursor-not-allowed bg-gray-400" : "bg-brandcolor"
             }`}
           >
-            Hire
+            Apply now
           </button>
         </div>
       </div>

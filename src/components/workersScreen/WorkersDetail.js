@@ -217,7 +217,7 @@ function WorkersDetail() {
                     />
                   </svg>
                   <span className="ml-2 text-gray-600">
-                    {workerDetails.workerAnalytics.averageRating || 0} (
+                    {workerDetails.workerAnalytics.averageRating.toString().slice(0,3) || 0} (
                     {workerReviews.length} Review)
                   </span>
                   <span className="font-bold text-xl ml-2">.</span>

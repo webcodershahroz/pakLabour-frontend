@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import JobBids from "./JobBids";
 import { StateContext } from "../../context/StateContext";
+import ActivityIndicator from "../utils/ActivityIndicator";
 
 function JobsDetail() {
   const [searchParams] = useSearchParams();
@@ -30,10 +31,6 @@ function JobsDetail() {
     navigate(`/job?${params.toString()}`);
   };
 
-  const handleCarousalNavigation = () => {
-    // if(photoCarousalIndex )
-    console.log(photoCarousalIndex);
-  };
 
   const getJobDetails = () => {
     setIsLoading(true);
@@ -63,7 +60,7 @@ function JobsDetail() {
 
   return (
     <>
-      {jobDetails && jobDetails.user && (
+      {!isLoading ? jobDetails && jobDetails.user && (
         <>
           <div className="container mx-auto h-[fit-content] w-full mt-8 mb-2">
             <div className="tab-header flex gap-6 border-b border-gray">
@@ -242,7 +239,8 @@ function JobsDetail() {
             <JobBids />
           )}
         </>
-      )}
+      ):<ActivityIndicator/>
+      }
     </>
   );
 }

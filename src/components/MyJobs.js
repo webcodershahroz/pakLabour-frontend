@@ -27,7 +27,7 @@ function MyJobs() {
         if (res.status === 200) {
           const data = await res.json();
           setMyJobs(data.jobs);
-          console.log(data)
+          console.log(data.jobs)
         }
         //server error
         else {
@@ -92,9 +92,10 @@ function MyJobs() {
     navigate(`/job?${params.toString()}`);
   };
 
-  useEffect(() => {
-    getJobs();
-  }, []);
+  useEffect(()=>{
+    getJobs()
+  },[])
+
 
   return (
     <>
@@ -135,10 +136,12 @@ function MyJobs() {
                 <thead className="text-xs">
                   <tr>
                     <th className="px-6 py-3 font-medium text-base">Title</th>
+                    <th className="px-6 py-3 font-medium text-base">Description</th>
+                    <th className="px-6 py-3 font-medium text-base">Location</th>
+                    <th className="px-6 py-3 font-medium text-base">Price</th>
                     <th className="px-6 py-3 font-medium text-base">
                       Posted on
                     </th>
-                    <th className="px-6 py-3 font-medium text-base">Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -158,9 +161,18 @@ function MyJobs() {
                             {job.title.slice(0, 30)}
                           </td>
                           <td className="px-6 py-4">
-                            {job.createdAt.slice(0, 10)}
+                            {job.description.slice(0,30)}...
                           </td>
                           <td className="px-6 py-4">
+                            {job.location}
+                          </td>
+                          <td className="px-6 py-4">
+                            {job.price}
+                          </td>
+                          <td className="px-6 py-4">
+                            {job.createdAt.slice(0, 10)}
+                          </td>
+                          {/* <td className="px-6 py-4">
                             <div>
                               <i className="fa-solid fa-pen mr-4 cursor-pointer"></i>
                               <i
@@ -172,7 +184,7 @@ function MyJobs() {
                                 style={{ color: "#ff0000" }}
                               ></i>
                             </div>
-                          </td>
+                          </td> */}
                         </tr>
                       </>
                     );

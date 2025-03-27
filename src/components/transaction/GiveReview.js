@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { StateContext } from "../../context/StateContext";
 import Alert from "../utils/Alert";
 
@@ -9,6 +9,7 @@ function GiveReview() {
   const [review, setReview] = useState("");
   const [stateData, setStateData] = useState({});
   const location = useLocation();
+  const navigate = useNavigate();
   const {
     isAlertVisible,
     alertData,
@@ -19,11 +20,14 @@ function GiveReview() {
     decodeJwtToken,
   } = useContext(StateContext);
 
-  const handleDoneButtonClicked =async () => {
+  const handleDoneButtonClicked = async () => {
     console.log("clicked");
-    setIsLoading(true)
+    setIsLoading(true);
     if (ratings.match("[0-4]{1}.[0-9]{1}") && review.length > 0)
-      await updateAnalyticsAndReview().then(()=>{setIsLoading(false)})
+      await updateAnalyticsAndReview().then(() => {
+        setIsLoading(false);
+        navigate("/my-orders");
+      });
     else {
       setAlertData({
         title: "Warning",
@@ -51,16 +55,16 @@ function GiveReview() {
         headers: {
           "Content-Type": "application/json",
         },
-      })
+      });
     } catch {
       // setIsLoading(false);
     }
   };
-  
+
   //function to update Order status
   const updateOrderStatus = async () => {
     const payload = {
-      orderId : stateData._id
+      orderId: stateData._id,
     };
     try {
       fetch(`http://localhost:2000/hire/update-order-status`, {
@@ -79,22 +83,21 @@ function GiveReview() {
 
   //function to update analytics and review
   const updateAnalyticsAndReview = async () => {
-     updateWorkerAnalytics({
+    setIsLoading(true);
+    updateWorkerAnalytics({
       user: stateData.wid._id,
-      orderCompleted: "1",
-      averageRating: ratings,
+      orderCompleted: 1,
+      averageRating: Number(ratings),
     });
 
     //write review
-     postReviewMessage();
+    postReviewMessage();
 
     //set status to completed
-     updateOrderStatus();
+    updateOrderStatus();
 
     // delete job
-     deleteJob(stateData.jobId)
-
-    
+    deleteJob(stateData.jobId);
   };
 
   //function to delete job
@@ -104,13 +107,12 @@ function GiveReview() {
       fetch(`http://localhost:2000/job/delete-job/${_id}`, {
         method: "DELETE",
       }).then(async (res) => {
-        setIsLoading(false)
+        // setIsLoading(false)
       });
     } catch (error) {
-      setIsLoading(false)
+      // setIsLoading(false)
     }
   };
-
 
   useEffect(() => {
     setStateData(location.state);

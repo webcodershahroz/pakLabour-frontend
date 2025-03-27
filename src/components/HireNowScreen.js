@@ -80,7 +80,7 @@ function HireNowScreen() {
       uid,
       wid: widParam,
       pid: pidParam,
-      jobId : selectedJob._id || Math.floor(Math.random()*99999),
+      jobId: selectedJob._id || Math.floor(Math.random() * 99999).toString(),
       jobTitle: workerHireData.title,
       jobDescription: workerHireData.description,
       jobLocation: workerHireData.location,
@@ -104,7 +104,7 @@ function HireNowScreen() {
         });
         setIsAlertVisible(true);
         hideAlert();
-        await deleteJob(selectedJob._id);
+        if (selectedJob._id) await deleteJob(selectedJob._id);
         navigate("/my-orders");
       } else {
         setAlertData({
@@ -192,11 +192,10 @@ function HireNowScreen() {
     <>
       {isAlertVisible && <Alert alertData={alertData} />}
 
-      <strong className="font-bold text-4xl mt-7 block ml-10">
-        Hire a worker
-      </strong>
+      <h1 className="font-bold text-4xl mt-7 block ml-10">Hire a worker</h1>
       {myJobs.length && (
-        <div className="container mx-auto">
+        <div className="container mx-auto border border-gray rounded-lg p-3 mb-3">
+          <h2 className="font-medium text-2xl mt-7 block ml-10">My jobs</h2>
           <table className="w-full text-sm text-left my-3">
             <thead className="text-xs">
               <tr>
@@ -223,6 +222,9 @@ function HireNowScreen() {
                     Clear
                   </button>
                 </th>
+                <th className="px-6 py-3 font-medium text-base">Description</th>
+                <th className="px-6 py-3 font-medium text-base">Location</th>
+                <th className="px-6 py-3 font-medium text-base">Price</th>
                 <th className="px-6 py-3 font-medium text-base">Posted on</th>
               </tr>
             </thead>
@@ -244,6 +246,7 @@ function HireNowScreen() {
                             setWorkerHireData({
                               ...workerHireData,
                               title: job.title,
+                              location: job.location,
                               description: job.description,
                               price: job.price,
                             });
@@ -254,6 +257,11 @@ function HireNowScreen() {
                           {job.title.slice(0, 30)}
                         </label>
                       </td>
+                      <td className="px-6 py-4">
+                        {job.description.slice(0, 30)}...
+                      </td>
+                      <td className="px-6 py-4">{job.location}</td>
+                      <td className="px-6 py-4">{job.price}</td>
                       <td className="px-6 py-4">
                         {job.createdAt.slice(0, 10)}
                       </td>
@@ -290,7 +298,7 @@ function HireNowScreen() {
                     maxlength="50"
                     onChange={handleTextInputChange}
                     type="text"
-                    value={selectedJob.title}
+                    value={workerHireData.title}
                     name="title"
                     id="title"
                     className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
@@ -311,7 +319,7 @@ function HireNowScreen() {
                 <textarea
                   maxLength="300"
                   onChange={handleTextInputChange}
-                  value={selectedJob.description}
+                  value={workerHireData.description}
                   name="description"
                   id="description"
                   rows="3"
@@ -335,7 +343,7 @@ function HireNowScreen() {
                   <input
                     onChange={handleTextInputChange}
                     type="number"
-                    value={selectedJob.price}
+                    value={workerHireData.price}
                     name="price"
                     id="price"
                     className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
@@ -357,7 +365,7 @@ function HireNowScreen() {
                     onChange={handleTextInputChange}
                     type="text"
                     name="location"
-                    value={selectedJob.location}
+                    value={workerHireData.location}
                     id="location"
                     className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
                     placeholder="Jhelum, Pakistan"

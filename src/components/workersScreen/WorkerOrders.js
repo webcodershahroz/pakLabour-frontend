@@ -81,7 +81,8 @@ function WorkerOrders() {
   };
 
   const handleClickOnOrder = (order) => {
-    if (decodeJwtToken().type === "postWork") {
+    console.log(order.jobStatus.trim())
+    if (decodeJwtToken().type === "postWork" && order.jobStatus.trim() === "Pending") {
       const params = new URLSearchParams();
       params.append("wid", order.wid._id);
       params.append("pid", order.pid._id);
@@ -220,7 +221,7 @@ function WorkerOrders() {
 
               {orders.length === 0 && (
                 <div className="w-full text-center mt-4">
-                  <p className="text-3xl">You don't have any posted job</p>
+                  <p className="text-3xl">You have no orders</p>
                 </div>
               )}
             </div>

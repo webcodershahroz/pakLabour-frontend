@@ -4,10 +4,16 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
 function Navbar() {
-  const { searchQuery, setSearchQuery, logout , decodeJwtToken,isUserLoggedIn} = useContext(StateContext);
+  const {
+    searchQuery,
+    setSearchQuery,
+    logout,
+    decodeJwtToken,
+    isUserLoggedIn,
+  } = useContext(StateContext);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showDropDown, setShowDropDown] = useState(false);
-  const [pictureUrl, setPictureUrl] = useState("")
+  const [pictureUrl, setPictureUrl] = useState("");
 
   const navigate = useNavigate();
   const [userDetails, setUserDetails] = useState({
@@ -17,18 +23,16 @@ function Navbar() {
   });
   const location = useLocation();
 
- 
-  
   //get picture of url to set in logo
   const getPictureUrl = async () => {
     const picture = await decodeJwtToken().picture;
-    setPictureUrl(picture)
+    setPictureUrl(picture);
   };
 
   useEffect(() => {
     if (isUserLoggedIn()) {
       setUserDetails(decodeJwtToken());
-      getPictureUrl()
+      getPictureUrl();
     }
   }, []);
 
@@ -51,73 +55,86 @@ function Navbar() {
             </Link>
             {isUserLoggedIn() && userDetails.type === "postWork" ? (
               <>
-              <Link
-                to="/my-jobs"
-                className="hover:underline decoration-brandcolor decoration-2 underline-offset-4 mr-7"
-              >
-                My jobs
-              </Link>
-              <Link
-                to="/my-orders"
-                className="hover:underline decoration-brandcolor decoration-2 underline-offset-4 mr-7"
-              >
-                Orders
-              </Link>
+                <Link
+                  to="/my-jobs"
+                  className="hover:underline decoration-brandcolor decoration-2 underline-offset-4 mr-7"
+                >
+                  My jobs
+                </Link>
+                <Link
+                  to="/my-orders"
+                  className="hover:underline decoration-brandcolor decoration-2 underline-offset-4 mr-7"
+                >
+                  Orders
+                </Link>
               </>
             ) : (
-              <>
-                <div>
-                  <button
-                    onClick={() => setShowDropDown((prev) => !prev)}
-                    className="relative flex items-center"
-                  >
-                    <p>My business</p>
-                    <svg
-                      className="w-2.5 h-2.5 ms-3"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 10 6"
+              isUserLoggedIn()  && (
+                <>
+                  <div>
+                    <button
+                      onClick={() => setShowDropDown((prev) => !prev)}
+                      className="relative flex items-center"
                     >
-                      <path
-                        stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="m1 1 4 4 4-4"
-                      />
-                    </svg>
-                  </button>
-                  <ul
-                    role="menu"
-                    hidden={!showDropDown}
-                    className="absolute z-10 min-w-[180px] overflow-auto rounded-lg border border-slate-200 bg-white p-1.5 shadow-lg shadow-sm focus:outline-none"
-                  >
-                    <li
-                      onClick={() => {
-                        navigate('/my-profile')
-                        setShowDropDown((prev) => !prev)
-                      }}
-                      role="menuitem"
-                      className="cursor-pointer text-slate-800 text-sm flex w-full items-center rounded-md p-3 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 text-red-500"
+                      <p>My business</p>
+                      <svg
+                        className="w-2.5 h-2.5 ms-3"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 10 6"
+                      >
+                        <path
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="m1 1 4 4 4-4"
+                        />
+                      </svg>
+                    </button>
+                    <ul
+                      role="menu"
+                      hidden={!showDropDown}
+                      className="absolute z-10 min-w-[180px] overflow-auto rounded-lg border border-slate-200 bg-white p-1.5 shadow-lg shadow-sm focus:outline-none"
                     >
-                      <p className="ml-2">My profiles</p>
-                    </li>
-                    <li
-                      onClick={() => {
-                        navigate('/my-orders')
-                        setShowDropDown((prev) => !prev)
-                      }}
-                      role="menuitem"
-                      className="cursor-pointer text-slate-800 text-sm flex w-full items-center rounded-md p-3 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 text-red-500"
-                    >
-                      <p className="ml-2">Orders</p>
-                    </li>
-                  </ul>
-                </div>
-              </>
+                      <li
+                        onClick={() => {
+                          navigate("/my-profile");
+                          setShowDropDown((prev) => !prev);
+                        }}
+                        role="menuitem"
+                        className="cursor-pointer text-slate-800 text-sm flex w-full items-center rounded-md p-3 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 text-red-500"
+                      >
+                        <p className="ml-2">My profiles</p>
+                      </li>
+                      <li
+                        onClick={() => {
+                          navigate("/my-orders");
+                          setShowDropDown((prev) => !prev);
+                        }}
+                        role="menuitem"
+                        className="cursor-pointer text-slate-800 text-sm flex w-full items-center rounded-md p-3 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 text-red-500"
+                      >
+                        <p className="ml-2">Orders</p>
+                      </li>
+                      <li
+                        onClick={() => {
+                          navigate("/my-applied-jobs");
+                          setShowDropDown((prev) => !prev);
+                        }}
+                        role="menuitem"
+                        className="cursor-pointer text-slate-800 text-sm flex w-full items-center rounded-md p-3 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 text-red-500"
+                      >
+                        <p className="ml-2">Applied jobs</p>
+                      </li>
+                    </ul>
+                  </div>
+                </>
+              )
             )}
           </div>
+
           <div
             className={`w-6/12 flex relative items-center ${
               location.pathname === "/" ? "invisible" : ""

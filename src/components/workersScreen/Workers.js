@@ -2,41 +2,17 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ActivityIndicator from "../utils/ActivityIndicator";
 
-function Workers() {
-  const [SearchResultWorkers, setSearchResultWorkers] = useState([]);
+function Workers(props) {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  //function to get the workers
-  const getWorkers = async () => {
-    setIsLoading(true);
-    try {
-      fetch(`http://localhost:2000/worker/get-workers`).then(async (res) => {
-        const data = await res.json();
-        setSearchResultWorkers(data);
-        console.log(SearchResultWorkers);
-        setIsLoading(false);
-      });
-    } catch (error) {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    //function call to getWorkers
-    const callGetWorkers = async () => {
-      await getWorkers();
-    };
-
-    callGetWorkers();
-  }, []);
   return (
     <>
       {isLoading ? (
         <ActivityIndicator />
       ) : (
         <div className="container mx-auto mb-10 flex gap-4 flex-wrap">
-          {SearchResultWorkers.map((worker) => {
+          {props.data.searchResultWorkers.map((worker) => {
             return (
               <button
                 onClick={() => {
@@ -75,7 +51,7 @@ function Workers() {
                     />
                   </svg>
                   <p className="ms-2 text-sm font-bold text-black">
-                    {worker.workerAnalytics.averageRating}
+                    {worker.workerAnalytics.averageRating.toString().slice(0,3)}
                   </p>
                   <span className="w-1 h-1 mx-1.5 bg-black rounded-full"></span>
                   <p className="text-sm font-medium text-black">
@@ -86,6 +62,18 @@ function Workers() {
               </button>
             );
           })}
+          {props.data.location.length > 0 &&
+          props.data.searchResultWorkers.length === 0 ? (
+            <div className="w-full text-center">
+              <p className="text-3xl">
+                No workers found in {props.data.location}
+              </p>
+            </div>
+          ) : props.data.searchResultWorkers.length === 0 && (
+            <div className="w-full text-center">
+              <p className="text-3xl">No worker found for {props.data.query}</p>
+            </div>
+          )}
         </div>
       )}
     </>
