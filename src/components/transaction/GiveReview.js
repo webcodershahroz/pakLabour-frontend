@@ -25,6 +25,9 @@ function GiveReview() {
     setIsLoading(true);
     if (ratings.match("[0-4]{1}.[0-9]{1}") && review.length > 0)
       await updateAnalyticsAndReview().then(() => {
+        postReviewMessage().then(() =>
+          updateOrderStatus().then(() => deleteJob(stateData.jobId))
+        );
         setIsLoading(false);
         navigate("/my-orders");
       });
@@ -88,16 +91,9 @@ function GiveReview() {
       user: stateData.wid._id,
       orderCompleted: 1,
       averageRating: Number(ratings),
+      totalEarnings: stateData.jobPrice,
+      withdrawAmount:stateData.jobPrice
     });
-
-    //write review
-    postReviewMessage();
-
-    //set status to completed
-    updateOrderStatus();
-
-    // delete job
-    deleteJob(stateData.jobId);
   };
 
   //function to delete job

@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ActivityIndicator from "../utils/ActivityIndicator";
+import Loading from "../utils/Loading";
 
 function Workers(props) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setIsLoading(props.data.isLoading);
+    console.log(isLoading);
+  }, [props.data.isLoading]);
 
   return (
     <>
@@ -51,7 +57,9 @@ function Workers(props) {
                     />
                   </svg>
                   <p className="ms-2 text-sm font-bold text-black">
-                    {worker.workerAnalytics.averageRating.toString().slice(0,3)}
+                    {worker.workerAnalytics.averageRating
+                      .toString()
+                      .slice(0, 3)}
                   </p>
                   <span className="w-1 h-1 mx-1.5 bg-black rounded-full"></span>
                   <p className="text-sm font-medium text-black">
@@ -62,16 +70,13 @@ function Workers(props) {
               </button>
             );
           })}
-          {props.data.location.length > 0 &&
-          props.data.searchResultWorkers.length === 0 ? (
+          {!isLoading && props.data.searchResultWorkers.length === 0 && (
             <div className="w-full text-center">
               <p className="text-3xl">
-                No workers found in {props.data.location}
+                {props.data.location.length > 0
+                  ? `No workers found in ${props.data.location}`
+                  : `No worker found for ${props.data.query}`}
               </p>
-            </div>
-          ) : props.data.searchResultWorkers.length === 0 && (
-            <div className="w-full text-center">
-              <p className="text-3xl">No worker found for {props.data.query}</p>
             </div>
           )}
         </div>

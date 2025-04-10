@@ -97,13 +97,15 @@ function SearchResults() {
   };
 
   useEffect(() => {
-    //function call to getJobs
-    const callGetJobs = async () => {
-      await getJobs();
-      await getWorkers();
+    const fetchData = async () => {
+      if (type === "jobs") {
+        await getJobs();
+      } else if (type === "workers") {
+        await getWorkers();
+      }
     };
-    callGetJobs();
-  }, [query]);
+    fetchData();
+  }, [query, type]);
 
   return (
     <>
@@ -158,12 +160,10 @@ function SearchResults() {
           </div>
         </div>
 
-        {isLoading ? (
-          <Loading />
-        ) : type === "jobs" ? (
-          <Jobs data={{ query, location, searchResultJobs }} />
+        {type === "jobs" ? (
+          <Jobs data={{ query, isLoading, location, searchResultJobs }} />
         ) : (
-          <Workers data={{ query, location, searchResultWorkers }} />
+          <Workers data={{ query, isLoading, location, searchResultWorkers }} />
         )}
       </div>
     </>

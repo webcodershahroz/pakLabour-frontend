@@ -127,7 +127,9 @@ export function StateContextProvider({ children }) {
     const payload = {
       user: data.user,
       orderCompleted :data.orderCompleted,
-      averageRating : data.averageRating
+      averageRating : data.averageRating,
+      totalEarnings:data.earnings,
+      withdrawAmount:data.withdrawAmount
     }
     console.log(payload)
     try {

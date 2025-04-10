@@ -33,6 +33,7 @@ import WorkerOrders from "./components/workersScreen/WorkerOrders";
 import MakeTransaction from "./components/transaction/MakeTransaction";
 import GiveReview from "./components/transaction/GiveReview";
 import WorkerAppliedJobs from "./components/workersScreen/WorkerAppliedJobs";
+import Analytics from "./components/Analytics";
 
 // Load Stripe using your public key
 const stripePromise = loadStripe(
@@ -186,6 +187,15 @@ function App() {
                 <Elements stripe={stripePromise}>
                   <MakeTransaction />
                 </Elements>
+              </PrivateRoutes>
+            }
+          />
+
+          <Route
+            path="/analytics"
+            element={
+              <PrivateRoutes>
+                  <Analytics />
               </PrivateRoutes>
             }
           />

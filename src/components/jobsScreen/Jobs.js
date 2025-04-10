@@ -2,11 +2,11 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import ActivityIndicator from "../utils/ActivityIndicator";
 import { StateContext } from "../../context/StateContext";
+import Loading from "../utils/Loading";
 
 function Jobs(props) {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  
 
   return (
     <>
@@ -54,18 +54,24 @@ function Jobs(props) {
                 </>
               );
             })}
-            {props.data.location.length > 0 &&
-          props.data.searchResultJobs.length === 0 ? (
-            <div className="w-full text-center">
-              <p className="text-3xl">
-                No jobs found in {props.data.location}
-              </p>
-            </div>
-          ) : props.data.searchResultJobs.length === 0 && (
-            <div className="w-full text-center">
-              <p className="text-3xl">No jobs found for {props.data.query}</p>
-            </div>
-          )}
+            {props.data.location.isLoading ? (
+              <Loading />
+            ) : props.data.location.length > 0 &&
+              props.data.searchResultJobs.length === 0 ? (
+              <div className="w-full text-center">
+                <p className="text-3xl">
+                  No jobs found in {props.data.location}
+                </p>
+              </div>
+            ) : (
+              !props.data.location.isLoading && props.data.searchResultJobs.length === 0 && (
+                <div className="w-full text-center">
+                  <p className="text-3xl">
+                    No jobs found for {props.data.query}
+                  </p>
+                </div>
+              )
+            )}
           </div>
         </div>
       )}
