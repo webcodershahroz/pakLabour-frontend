@@ -8,6 +8,11 @@ function Jobs(props) {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    setIsLoading(props.data.isLoading);
+    console.log(isLoading);
+  }, [props.data.isLoading]);
+
   return (
     <>
       {isLoading ? (
@@ -54,23 +59,14 @@ function Jobs(props) {
                 </>
               );
             })}
-            {props.data.location.isLoading ? (
-              <Loading />
-            ) : props.data.location.length > 0 &&
-              props.data.searchResultJobs.length === 0 ? (
+            {!isLoading && props.data.searchResultJobs.length === 0 && (
               <div className="w-full text-center">
                 <p className="text-3xl">
-                  No jobs found in {props.data.location}
+                  {props.data.location.length > 0
+                    ? `No workers found in ${props.data.location}`
+                    : `No worker found for ${props.data.query}`}
                 </p>
               </div>
-            ) : (
-              !props.data.location.isLoading && props.data.searchResultJobs.length === 0 && (
-                <div className="w-full text-center">
-                  <p className="text-3xl">
-                    No jobs found for {props.data.query}
-                  </p>
-                </div>
-              )
             )}
           </div>
         </div>

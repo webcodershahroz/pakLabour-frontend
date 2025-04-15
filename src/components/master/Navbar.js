@@ -165,6 +165,16 @@ function Navbar() {
                       >
                         <p className="ml-2">Applied jobs</p>
                       </li>
+                      <li
+                        onClick={() => {
+                          navigate("/analytics");
+                          setShowDropDown((prev) => !prev);
+                        }}
+                        role="menuitem"
+                        className="cursor-pointer text-slate-800 text-sm flex w-full items-center rounded-md p-3 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 text-red-500"
+                      >
+                        <p className="ml-2">Analytics</p>
+                      </li>
                     </ul>
                   </div>
                 </>

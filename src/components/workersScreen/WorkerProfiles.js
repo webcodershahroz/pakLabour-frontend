@@ -30,6 +30,7 @@ function WorkerProfiles() {
           if (res.status === 200) {
             const data = await res.json();
             setMyWorkerProfile(data.worker);
+            console.log(data.worker)
           }
           //server error
           else {
@@ -82,12 +83,12 @@ function WorkerProfiles() {
   };
 
   //handle click on job listed in table
-  const handleOnJobClick = (job) => {
-    //   const params = new URLSearchParams();
-    //   params.append('title',job.title);
-    //   params.append('type','job-details');
-    //   params.append('id',job._id);
-    //   navigate(`/job?${params.toString()}`);
+  const handleOnProfileClick = (profile) => {
+      const params = new URLSearchParams();
+      params.append('name',profile.user.name);
+      params.append('id',profile._id);
+
+      navigate(`/worker?${params.toString()}`);
   };
 
   useEffect(() => {
@@ -155,7 +156,7 @@ function WorkerProfiles() {
                           >
                             <td
                               onClick={() => {
-                                handleOnJobClick(profile);
+                                handleOnProfileClick(profile);
                               }}
                               className="px-6 py-4 font-normal underline flex items-center gap-1"
                             >

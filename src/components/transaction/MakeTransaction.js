@@ -48,7 +48,7 @@ function MakeTransaction() {
 
       // Backend payment processing
       const payload = {
-        amount: stateData.jobPrice / 300,
+        amount: stateData.jobPrice,
         paymentMethodId: paymentMethod.id,
         workerUserProfileId : stateData.wid._id
       };

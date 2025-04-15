@@ -16,22 +16,18 @@ function GiveReview() {
     setAlertData,
     hideAlert,
     setIsAlertVisible,
-    updateWorkerAnalytics,
+    // updateRatings,
     decodeJwtToken,
   } = useContext(StateContext);
 
   const handleDoneButtonClicked = async () => {
     console.log("clicked");
     setIsLoading(true);
-    if (ratings.match("[0-4]{1}.[0-9]{1}") && review.length > 0)
-      await updateAnalyticsAndReview().then(() => {
-        postReviewMessage().then(() =>
-          updateOrderStatus().then(() => deleteJob(stateData.jobId))
-        );
-        setIsLoading(false);
-        navigate("/my-orders");
-      });
-    else {
+    if (ratings.match("[0-4]{1}.[0-9]{1}") && review.length > 0) {
+      await updateRatings();
+      setIsLoading(false);
+      navigate("/my-orders");
+    } else {
       setAlertData({
         title: "Warning",
         message: "Enter a valid rating or write a review",
@@ -58,7 +54,9 @@ function GiveReview() {
         headers: {
           "Content-Type": "application/json",
         },
-      });
+      }).then(async res => {
+        await updateOrderStatus()
+      })
     } catch {
       // setIsLoading(false);
     }
@@ -76,24 +74,33 @@ function GiveReview() {
         headers: {
           "Content-Type": "application/json",
         },
-      }).then(() => {
-        // setIsLoading(false);
+      }).then(async () => {
+        await deleteJob(stateData.jobId)
       });
     } catch {
-      // setIsLoading(false);
     }
   };
 
-  //function to update analytics and review
-  const updateAnalyticsAndReview = async () => {
-    setIsLoading(true);
-    updateWorkerAnalytics({
-      user: stateData.wid._id,
-      orderCompleted: 1,
-      averageRating: Number(ratings),
-      totalEarnings: stateData.jobPrice,
-      withdrawAmount:stateData.jobPrice
-    });
+    //function to update worker analytics
+  const updateRatings = async () => {
+    const userId = await decodeJwtToken()._id
+    const payload = {
+      user: userId,
+      averageRating : ratings
+    }
+    console.log(payload)
+    try {
+      fetch(`http://localhost:2000/review/update-analytics`, {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }).then(async (res) => {
+        await postReviewMessage()
+      });
+    } catch (error) {}
+  
   };
 
   //function to delete job
@@ -103,10 +110,16 @@ function GiveReview() {
       fetch(`http://localhost:2000/job/delete-job/${_id}`, {
         method: "DELETE",
       }).then(async (res) => {
-        // setIsLoading(false)
+        setAlertData({
+          title: "Success",
+          message: "Transaction successfully completed",
+          type: "success",
+        });
+  
+        setIsAlertVisible(true);
+        hideAlert();
       });
     } catch (error) {
-      // setIsLoading(false)
     }
   };
 

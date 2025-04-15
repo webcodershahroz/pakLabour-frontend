@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import myPic from "../../img/profile-photo.jpg";
-import ActivityIndicator from '../utils/ActivityIndicator'
+import ActivityIndicator from "../utils/ActivityIndicator";
 
 function JobBids() {
   const navigate = useNavigate();
@@ -20,10 +20,8 @@ function JobBids() {
             const data = await res.json();
             setJobBids(data.bids);
             console.log(data);
-
           }
-      setIsLoading(false);
-
+          setIsLoading(false);
         }
       );
     } catch (error) {
@@ -32,7 +30,6 @@ function JobBids() {
   };
 
   useEffect(() => {
-    
     getJobBids();
   }, []);
   return (
@@ -71,7 +68,12 @@ function JobBids() {
                       </strong>
                       <span className="text-gray-500 font-bold">
                         PKR {bid.jobPrice}
-                        <span className="text-sm font-normal">in 30 days</span>
+                        <span className="text-sm font-normal">
+                          in{" "}
+                          {bid.jobDuration == 1
+                            ? bid.jobDuration + " day"
+                            : bid.jobDuration + " days"}
+                        </span>
                       </span>
                       <div className="flex">
                         <span className=" w-[fit-content] rounded-full py-1 mr-3 text-gray-700">
