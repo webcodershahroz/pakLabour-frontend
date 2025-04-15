@@ -83,8 +83,8 @@ function Message() {
           picture: await decodeJwtToken().picture,
         },
       };
-      console.log(renderPayload);
       setUserMessages((prev) => [...prev, renderPayload]);
+      setInputMessage("")
     });
   };
 

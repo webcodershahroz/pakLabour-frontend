@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { StateContext } from "../../context/StateContext";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import logo from "../../img/logo.png";
 
 function Navbar() {
   const {
@@ -39,13 +40,10 @@ function Navbar() {
   return (
     <>
       {!location.pathname.includes("/auth/") && (
-        <nav className="h-20 w-full border-b border-gray flex items-center px-5 justify-between ">
+        <nav className="h-20 w-full border-b border-gray flex items-center px-5 justify-between">
           <div className="flex items-center justify-between">
-            <Link
-              to="/"
-              className="text-2xl font-bold underline decoration-brandcolor decoration-4"
-            >
-              PakLabour
+            <Link to="/">
+              <img src={logo} height={70} width={82} alt="" />
             </Link>
             <Link
               to="/"
@@ -55,58 +53,58 @@ function Navbar() {
             </Link>
             {isUserLoggedIn() && userDetails.type === "postWork" ? (
               <>
-              <div>
-                    <button
-                      onClick={() => setShowDropDown((prev) => !prev)}
-                      className="relative flex items-center"
+                <div>
+                  <button
+                    onClick={() => setShowDropDown((prev) => !prev)}
+                    className="relative flex items-center"
+                  >
+                    <p>My Work</p>
+                    <svg
+                      className="w-2.5 h-2.5 ms-3"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 10 6"
                     >
-                      <p>My Work</p>
-                      <svg
-                        className="w-2.5 h-2.5 ms-3"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 10 6"
-                      >
-                        <path
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="m1 1 4 4 4-4"
-                        />
-                      </svg>
-                    </button>
-                    <ul
-                      role="menu"
-                      hidden={!showDropDown}
-                      className="absolute z-10 min-w-[180px] overflow-auto rounded-lg border border-slate-200 bg-white p-1.5 shadow-lg shadow-sm focus:outline-none"
+                      <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="m1 1 4 4 4-4"
+                      />
+                    </svg>
+                  </button>
+                  <ul
+                    role="menu"
+                    hidden={!showDropDown}
+                    className="absolute z-10 min-w-[180px] overflow-auto rounded-lg border border-slate-200 bg-white p-1.5 shadow-lg shadow-sm focus:outline-none"
+                  >
+                    <li
+                      onClick={() => {
+                        navigate("/my-jobs");
+                        setShowDropDown((prev) => !prev);
+                      }}
+                      role="menuitem"
+                      className="cursor-pointer text-slate-800 text-sm flex w-full items-center rounded-md p-3 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 text-red-500"
                     >
-                      <li
-                        onClick={() => {
-                          navigate("/my-jobs");
-                          setShowDropDown((prev) => !prev);
-                        }}
-                        role="menuitem"
-                        className="cursor-pointer text-slate-800 text-sm flex w-full items-center rounded-md p-3 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 text-red-500"
-                      >
-                        <p className="ml-2">My Jobs</p>
-                      </li>
-                      <li
-                        onClick={() => {
-                          navigate("/my-orders");
-                          setShowDropDown((prev) => !prev);
-                        }}
-                        role="menuitem"
-                        className="cursor-pointer text-slate-800 text-sm flex w-full items-center rounded-md p-3 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 text-red-500"
-                      >
-                        <p className="ml-2">Orders</p>
-                      </li>
-                    </ul>
-                  </div>
+                      <p className="ml-2">My Jobs</p>
+                    </li>
+                    <li
+                      onClick={() => {
+                        navigate("/my-orders");
+                        setShowDropDown((prev) => !prev);
+                      }}
+                      role="menuitem"
+                      className="cursor-pointer text-slate-800 text-sm flex w-full items-center rounded-md p-3 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 text-red-500"
+                    >
+                      <p className="ml-2">Orders</p>
+                    </li>
+                  </ul>
+                </div>
               </>
             ) : (
-              isUserLoggedIn()  && (
+              isUserLoggedIn() && (
                 <>
                   <div>
                     <button
@@ -267,23 +265,6 @@ function Navbar() {
               </>
             ) : (
               <>
-                <div>
-                  <Link
-                    to="/workers"
-                    className="hover:underline hover:decoration-brandcolor hover:decoration-2 underline-offset-4"
-                  >
-                    Workers
-                  </Link>
-                </div>
-                <div className="mx-7">
-                  <Link
-                    to="/jobs"
-                    className="hover:underline hover:decoration-brandcolor hover:decoration-2 underline-offset-4"
-                  >
-                    Jobs
-                  </Link>
-                </div>
-                <div className="w-px h-7 bg-black"></div>
                 <Link
                   className="ml-7 px-2.5 py-1.5 border-2 border-brandcolor rounded-lg font-bold text-brandcolor hover:bg-brandcolor hover:text-white"
                   to="/auth/signin"

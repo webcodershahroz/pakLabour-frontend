@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Alert from "../utils/Alert";
+import logo from "../../img/logo.png";
 
 function Signin() {
   const [showPassword, setShowPassword] = useState(false);
@@ -33,7 +34,7 @@ function Signin() {
       .then(async (res) => {
         //navigation to create new account
         if (res.status === 404) {
-          navigate("/auth/create-new-account", { state:  email  });
+          navigate("/auth/create-new-account", { state: email });
         }
         //showing alert of incorrect password
         else if (res.status === 401) {
@@ -42,7 +43,7 @@ function Signin() {
             message: "Please enter the correct password",
             type: "error",
           });
-          
+
           setIsAlertVisible(true);
           hideAlert();
         } else if (res.status === 200) {
@@ -50,7 +51,7 @@ function Signin() {
             const data = await res.json();
             localStorage.setItem("token", JSON.stringify(data));
             // navigate("/dashboard");
-            window.location.href = '/dashboard'
+            window.location.href = "/dashboard";
           } catch (error) {
             console.log("Local storage " + error.message);
           }
@@ -100,14 +101,11 @@ function Signin() {
     <>
       {isAlertVisible && <Alert alertData={alertData} />}
 
-      <div className="h-[100vh] mb-10 mt-20">
-        <Link
-          to="/"
-          className="flex items-center justify-center text-2xl font-bold underline decoration-brandcolor decoration-4"
-        >
-          PakLabour
-        </Link>
+      <div className="h-[100vh] mb-10">
         <div className="flex flex-col items-center justify-center px-6 mx-auto lg:py-0 my-10">
+        <Link to="/">
+          <img src={logo} height={70} width={82} alt="" />
+        </Link>
           <div className=" bg-white rounded-lg shadow dark:border max-w-md  dark:border-gray-700">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
               <span>
@@ -123,7 +121,10 @@ function Signin() {
 
               <div className="space-y-4 md:space-y-6">
                 <div>
-                  <label htmlFor="email" className="block mb-2 text-sm font-medium">
+                  <label
+                    htmlFor="email"
+                    className="block mb-2 text-sm font-medium"
+                  >
                     Your email
                   </label>
                   <input
@@ -137,7 +138,10 @@ function Signin() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="password" className="block mb-2 text-sm font-medium ">
+                  <label
+                    htmlFor="password"
+                    className="block mb-2 text-sm font-medium "
+                  >
                     Password
                   </label>
                   <div className="relative">
@@ -199,8 +203,6 @@ function Signin() {
 }
 
 export default Signin;
-
-
 
 // <div className="flex items-center justify-between">
 //                   <div className="flex items-start">

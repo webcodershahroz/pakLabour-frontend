@@ -6,7 +6,7 @@ function Home() {
   const navigate = useNavigate();
 
   return (
-    <div className="h-[70vh] mb-14">
+    <div className="h-[70vh] mb-14 mt-10">
       <div
         className={`h-[24rem] w-11/12 bg-brandcolor m-auto rounded-3xl flex flex-col items-center justify-center bg-gradient-to-r from-brandcolor from-10% via-emerald-400 via-30% to-emerald-500 to-90% drop-shadow-lg gap-y-14 p-5 mb-20 `}
       >

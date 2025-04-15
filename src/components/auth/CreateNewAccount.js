@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Alert from "../utils/Alert";
+import logo from "../../img/logo.png";
 
 function CreateNewAccount() {
   const location = useLocation();
   const [showPassword, setShowPassword] = useState(false);
   const [accountType, setAccountType] = useState("");
-  const [email, setEmail] = useState(location.state);
+  const [email, setEmail] = useState(location.state || "");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [userLocation, setUserLocation] = useState("");
@@ -105,14 +106,11 @@ function CreateNewAccount() {
     <>
       {isAlertVisible && <Alert alertData={alertData} />}
 
-      <div className="h-[100vh] mb-10 mt-20">
-        <Link
-          to="/"
-          className="flex items-center justify-center text-2xl font-bold underline decoration-brandcolor decoration-4"
-        >
-          PakLabour
-        </Link>
+      <div className="h-fit mb-10">
         <div className="flex flex-col items-center justify-center px-6 mx-auto lg:py-0 my-10">
+          <Link to="/">
+            <img src={logo} height={70} width={82} alt="" />
+          </Link>
           <div className=" bg-white rounded-lg shadow dark:border max-w-md dark:border-gray-700">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
               <span>
@@ -159,7 +157,10 @@ function CreateNewAccount() {
                 </div>
               </div>
               <div>
-                <label htmlFor="name" className="block mb-2 text-sm font-medium">
+                <label
+                  htmlFor="name"
+                  className="block mb-2 text-sm font-medium"
+                >
                   Full Name
                 </label>
                 <input
@@ -174,8 +175,11 @@ function CreateNewAccount() {
                 />
               </div>
               <div>
-                <label htmlFor="name" className="block mb-2 text-sm font-medium">
-                 Location
+                <label
+                  htmlFor="name"
+                  className="block mb-2 text-sm font-medium"
+                >
+                  Location
                 </label>
                 <input
                   type="text"
@@ -189,7 +193,10 @@ function CreateNewAccount() {
                 />
               </div>
               <div>
-                <label htmlFor="email" className="block mb-2 text-sm font-medium">
+                <label
+                  htmlFor="email"
+                  className="block mb-2 text-sm font-medium"
+                >
                   Your email
                 </label>
                 <input
@@ -204,7 +211,10 @@ function CreateNewAccount() {
                 />
               </div>
               <div>
-                <label htmlFor="password" className="block mb-2 text-sm font-medium ">
+                <label
+                  htmlFor="password"
+                  className="block mb-2 text-sm font-medium "
+                >
                   Create Password
                 </label>
                 <div className="relative">

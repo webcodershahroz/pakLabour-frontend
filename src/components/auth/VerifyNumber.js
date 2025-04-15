@@ -2,10 +2,11 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Alert from "../utils/Alert";
 import { StateContext } from "../../context/StateContext";
+import logo from "../../img/logo.png";
 
 function VerifyNumber({ route }) {
   const location = useLocation();
-  const { name, accountType,userLocation, password } = location.state;
+  const { name, accountType, userLocation, password } = location.state;
   const [email, setEmail] = useState(location.state.email);
   const {
     isAlertVisible,
@@ -112,13 +113,10 @@ function VerifyNumber({ route }) {
       {isAlertVisible && <Alert alertData={alertData} />}
 
       <div className="h-[100vh] my-10">
-        <Link
-          to="/"
-          className="flex items-center justify-center text-2xl font-bold underline decoration-brandcolor decoration-4"
-        >
-          PakLabour
-        </Link>
         <div className="flex flex-col items-center justify-center px-6 mx-auto lg:py-0 my-10">
+        <Link to="/">
+          <img src={logo} height={70} width={82} alt="" />
+        </Link>
           <div className=" bg-white rounded-lg shadow dark:border max-w-md dark:border-gray-700 w-full ">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
               <span>

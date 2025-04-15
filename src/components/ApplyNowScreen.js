@@ -104,7 +104,7 @@ function ApplyNowScreen() {
     <>
       {isAlertVisible && <Alert alertData={alertData} />}
 
-      <strong className="font-bold text-4xl mt-7 block ml-10">
+      <strong className="font-bold text-4xl my-5 block ml-10">
         {titleParam}
       </strong>
       <div className="border border-gray mx-8 rounded px-10 py-2">

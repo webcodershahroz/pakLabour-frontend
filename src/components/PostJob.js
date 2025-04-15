@@ -127,7 +127,7 @@ function PostJob() {
     <>
       {isAlertVisible && <Alert alertData={alertData} />}
 
-      <strong className="font-bold text-4xl mb-7 block ml-10">
+      <strong className="font-bold text-3xl my-5 block ml-10">
         Post a job
       </strong>
       <div className="border border-gray mx-8 rounded px-10 py-2">

@@ -74,7 +74,7 @@ function Analytics() {
     <>
       {isAlertVisible && <Alert alertData={alertData} />}
 
-      <strong className="font-bold text-4xl mt-7 container block ml-24 mb-3">
+      <strong className="font-bold text-3xl my-10 container block ml-24 mb-3">
         Analytics
       </strong>
       {workerAnalytics && workerAnalytics.averageRating ? (
