@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { StateContext } from "../context/StateContext";
-import Alert from "./utils/Alert";
+import { StateContext } from "../../context/StateContext";
+import Alert from "../utils/Alert";
 
 function HireNowScreen() {
   const navigate = useNavigate();
@@ -187,6 +187,7 @@ function HireNowScreen() {
 
   useEffect(() => {
     getMyJobs();
+    // eslint-disable-next-line
   }, []);
   return (
     <>

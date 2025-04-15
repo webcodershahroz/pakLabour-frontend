@@ -11,29 +11,29 @@ import {
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import SearchResults from "./components/SearchResults";
-import Jobs from "./components//jobsScreen/Jobs";
+import Jobs from "./components/jobsScreen/Jobs";
 import Workers from "./components/workersScreen/Workers";
 import Signin from "./components/auth/Signin";
 import WorkersDetail from "./components/workersScreen/WorkersDetail";
-import JobsDetail from "./components//jobsScreen/JobsDetail";
+import JobsDetail from "./components/jobsScreen/JobsDetail";
 import CreateNewAccount from "./components/auth/CreateNewAccount";
 import Dashboard from "./components/Dashboard";
 import ForgetPassword from "./components/resetPassword/ForgetPassword";
 import VerifyNumber from "./components/auth/VerifyNumber";
 import Message from "./components/messages/Message";
-import PostJob from "./components/PostJob";
-import MyJobs from "../src/components/MyJobs";
+import PostJob from "./components/postWorkUserScreens/PostJob";
+import MyJobs from "../src/components/postWorkUserScreens/MyJobs";
 import ResetPassword from "./components/resetPassword/ResetPassword";
 import Settings from "./components/settingsScreen/Settings";
-import HireNowScreen from "./components/HireNowScreen";
-import ApplyNowScreen from "./components/ApplyNowScreen";
+import HireNowScreen from "./components/postWorkUserScreens/HireNowScreen";
+import ApplyNowScreen from "./components/workersScreen/ApplyNowScreen";
 import CreateWorkerProfile from "./components/workersScreen/CreateWorkerProfile";
 import WorkerProfiles from "./components/workersScreen/WorkerProfiles";
 import WorkerOrders from "./components/workersScreen/WorkerOrders";
 import MakeTransaction from "./components/transaction/MakeTransaction";
 import GiveReview from "./components/transaction/GiveReview";
 import WorkerAppliedJobs from "./components/workersScreen/WorkerAppliedJobs";
-import Analytics from "./components/Analytics";
+import Analytics from "./components/workersScreen/Analytics";
 
 // Load Stripe using your public key
 const stripePromise = loadStripe(

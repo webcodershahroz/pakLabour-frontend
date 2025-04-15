@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
-import { StateContext } from "../context/StateContext";
-import Alert from "./utils/Alert";
-import ActivityIndicator from "../components/utils/ActivityIndicator";
+import { StateContext } from "../../context/StateContext";
+import Alert from "../utils/Alert";
+import ActivityIndicator from "../utils/ActivityIndicator";
 
 
 function Analytics() {
@@ -69,6 +69,7 @@ function Analytics() {
 
   useEffect(() => {
     getUserAnalytics();
+    // eslint-disable-next-line
   }, []);
   return (
     <>

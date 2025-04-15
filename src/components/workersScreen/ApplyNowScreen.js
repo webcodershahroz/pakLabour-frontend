@@ -1,12 +1,14 @@
 import React, { useContext, useState } from "react";
-import Alert from "../components/utils/Alert";
-import { StateContext } from "../context/StateContext";
-import { useNavigate } from "react-router-dom";
+import Alert from "../utils/Alert";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { StateContext } from "../../context/StateContext";
 
-function PostJob() {
+function ApplyNowScreen() {
   const navigate = useNavigate();
-  const [pictureUrl, setPictureUrl] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
+  const [searchParams] = useSearchParams();
+  const titleParam = searchParams.get("title");
+  const idParam = searchParams.get("id");
+  const [isLoading, setIsLoading] = useState(false);
   const {
     isAlertVisible,
     setIsAlertVisible,
@@ -15,95 +17,69 @@ function PostJob() {
     hideAlert,
     decodeJwtToken,
   } = useContext(StateContext);
-  const [isLoading, setIsLoading] = useState(false);
 
   //job states
-  const [jobData, setJobData] = useState({
-    title: "",
+  const [applyNowData, setApplyNowData] = useState({
+    title: titleParam,
     description: "",
     price: "",
-    location: "",
-    searchTags: "",
+    duration: "",
   });
 
   //handle text input change
   const handleTextInputChange = (e) => {
     const { name, value } = e.target;
-    setJobData({ ...jobData, [name]: value });
+    setApplyNowData({ ...applyNowData, [name]: value });
   };
 
-  //handle file input change
-  const handleFileInputChange = async (e) => {
-    const files = Array.from(e.target.files);
-    setPictureUrl(files);
-    try {
-      const previews = files.map((file) => URL.createObjectURL(file));
-      setPreviewUrl(previews);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  //funtion to post job
-  const postJob = async () => {
-    setIsLoading(true);
-    const userId = await decodeJwtToken()._id;
-    console.log(userId);
-    const formData = new FormData();
-    formData.append("user", userId);
-    formData.append("title", jobData.title);
-    formData.append("description", jobData.description);
-    formData.append("price", jobData.price);
-    formData.append("location", jobData.location);
-    formData.append("searchTags", jobData.searchTags);
-
-    if (pictureUrl) pictureUrl.forEach(picture => formData.append('pictures',picture))
-
-    try {
-      fetch("http://localhost:2000/job/post-job", {
-        method: "POST",
-        body: formData,
-      }).then(async (res) => {
-        if (res.status === 201) {
-          setAlertData({
-            title: "Success",
-            message: "Job Posted Successfully",
-            type: "success",
-          });
-          setIsAlertVisible(true);
-          hideAlert();
-          navigate("/my-jobs");
-        } else {
-          setAlertData({
-            title: "Error",
-            message: "There is error posting your job",
-            type: "error",
-          });
-          setIsAlertVisible(true);
-          hideAlert();
-        }
-        setIsLoading(false);
-      });
-    } catch (error) {
-      setAlertData({
-        title: "Internet error",
-        message: "Check your internet error and try again",
-        type: "error",
-      });
-      setIsAlertVisible(true);
-      hideAlert();
-      setIsLoading(false);
-    }
+  //funtion to hire worker
+  const applyNow = async () => {
+    setIsLoading(true)
+    const user = await decodeJwtToken()._id;
+    const payload = {
+      user,
+      jobId: idParam,
+      jobTitle: applyNowData.title,
+      jobDescription: applyNowData.description,
+      jobDuration: applyNowData.duration,
+      jobPrice: applyNowData.price,
+    };
+    fetch("http://localhost:2000/apply/apply-now", {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((res) => {
+      if (res.status === 200) {
+        setAlertData({
+          title: "Success",
+          message: "Applied successfully for the job",
+          type: "success",
+        });
+        setIsAlertVisible(true);
+        hideAlert();
+        navigate('/my-applied-jobs')
+      } else {
+        setAlertData({
+          title: "Error",
+          message: "Something went wrong",
+          type: "error",
+        });
+        setIsAlertVisible(true);
+        hideAlert();
+      }
+      setIsLoading(false)
+    });
   };
 
   //function to handle post button click
-  const handlePostButtonClick = async () => {
+  const handleApplyNowButtonClick = async () => {
     if (
-      jobData.title.length > 0 &&
-      jobData.description.length > 0 &&
-      jobData.searchTags.length > 0
+      applyNowData.description.length > 0 &&
+      applyNowData.duration.length > 0
     ) {
-      if (jobData.price.length > 3) await postJob();
+      if (applyNowData.price.length > 3) await applyNow();
       else {
         setAlertData({
           title: "Price Limit",
@@ -121,20 +97,22 @@ function PostJob() {
       });
       setIsAlertVisible(true);
       hideAlert();
+
     }
   };
   return (
     <>
       {isAlertVisible && <Alert alertData={alertData} />}
 
-      <strong className="font-bold text-3xl my-5 block ml-10">
-        Post a job
+      <strong className="font-bold text-4xl my-5 block ml-10">
+        {titleParam}
       </strong>
       <div className="border border-gray mx-8 rounded px-10 py-2">
         <div className="pb-2 flex justify-start items-baseline flex-wrap">
           <div className="xl:w-1/3 md:w-1/3">
+            <h2 className="font-bold text-3xl mt-7 mb-4">Apply for job</h2>
             <h2 className="text-base/7 font-semibold text-gray-900">
-              Enter Job details
+              Enter required details
             </h2>
             <p className="mt-1 text-sm/6 text-gray-600">
               Fill all the field carefully...
@@ -147,18 +125,19 @@ function PostJob() {
                 htmlFor="title"
                 className="block text-sm/6 font-medium text-gray-900"
               >
-                Title
+                Job title
               </label>
               <div className="mt-2">
                 <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-brandcolor">
                   <input
                     maxlength="50"
-                    onChange={handleTextInputChange}
+                    // onChange={handleTextInputChange}
+                    value={titleParam}
                     type="text"
+                    disabled
                     name="title"
                     id="title"
-                    className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
-                    placeholder="Title of your job"
+                    className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-400 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
                   />
                 </div>
               </div>
@@ -182,7 +161,7 @@ function PostJob() {
                 ></textarea>
               </div>
               <p className="mt-3 text-sm/6 text-gray-600">
-                Write about your job
+                Write about your skills related to job
               </p>
             </div>
 
@@ -206,68 +185,28 @@ function PostJob() {
                 </div>
               </div>
             </div>
+
             <div className="sm:col-span-4">
               <label
-                htmlFor="tags"
+                htmlFor="start-time"
                 className="block text-sm/6 font-medium text-gray-900"
               >
-                Search Tags
+                Duration
               </label>
-              <div className="mt-2">
+              <div className="mt-2 w-1/2">
                 <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-brandcolor">
                   <input
                     onChange={handleTextInputChange}
-                    placeholder="Tag1,Tag2,Tag3 Tag3,Tag4"
-                    type="text"
-                    name="searchTags"
-                    id="searchTags"
+                    placeholder="Duration in days : 30"
+                    type="number"
+                    name="duration"
+                    id="duration"
                     className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
                   />
                 </div>
               </div>
             </div>
-            <div className="sm:col-span-4">
-              <label
-                htmlFor="tags"
-                className="block text-sm/6 font-medium text-gray-900"
-              >
-                Location
-              </label>
-              <div className="mt-2">
-                <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-brandcolor">
-                  <input
-                    onChange={handleTextInputChange}
-                    placeholder="Dina"
-                    type="text"
-                    name="location"
-                    id="location"
-                    className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="col-span-full">
-              <label
-                htmlFor="cover-photo"
-                className="block text-sm/6 font-medium text-gray-900"
-              >
-                Work Photo
-              </label>
-              <input
-                onChange={handleFileInputChange}
-                id="file-upload"
-                name="file-upload"
-                type="file"
-                multiple={true}
-              />
-              <div className="flex gap-2 flex-wrap mt-3">
-                {previewUrl
-                  ? previewUrl.map((pu) => {
-                      return <img src={pu} className="object-contain" height={100} width={100} alt="d" />;
-                    })
-                  : ""}
-              </div>
-            </div>
+
           </div>
         </div>
         <div className="mt-6 flex items-center justify-end gap-x-6">
@@ -278,12 +217,13 @@ function PostJob() {
             Cancel
           </button>
           <button
-            onClick={handlePostButtonClick}
+            onClick={handleApplyNowButtonClick}
+            disabled={isLoading}
             className={`rounded-md px-3 py-2 text-sm font-semibold text-black shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brandcolor ${
               isLoading ? "cursor-not-allowed bg-gray-400" : "bg-brandcolor"
             }`}
           >
-            Post
+            Apply now
           </button>
         </div>
       </div>
@@ -291,4 +231,4 @@ function PostJob() {
   );
 }
 
-export default PostJob;
+export default ApplyNowScreen;

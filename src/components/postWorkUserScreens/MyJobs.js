@@ -1,9 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import { StateContext } from "../context/StateContext";
-import Alert from "./utils/Alert";
-import Loading from "./utils/Loading";
-import ActivityIndicator from "./utils/ActivityIndicator";
+import { Link, useNavigate } from "react-router-dom";
+import { StateContext } from "../../context/StateContext";
+import Alert from "../utils/Alert";
+import ActivityIndicator from "../utils/ActivityIndicator";
 function MyJobs() {
   const navigate = useNavigate();
   const [myJobs, setMyJobs] = useState([]);
@@ -48,40 +47,40 @@ function MyJobs() {
     }
   };
 
-  //delete job using _id
-  const deleteJob = (_id) => {
-    try {
-      fetch(`http://localhost:2000/job/delete-job/${_id}`, {
-        method: "DELETE",
-      }).then(async (res) => {
-        //user has posted jobs
-        if (res.status === 200) {
-          setMyJobs((prevJobs) => prevJobs.filter((job) => job._id !== _id));
-          setAlertData({
-            title: "Deleted successfully",
-            message: "Job deleted successfully",
-            type: "success",
-          });
+  // //delete job using _id
+  // const deleteJob = (_id) => {
+  //   try {
+  //     fetch(`http://localhost:2000/job/delete-job/${_id}`, {
+  //       method: "DELETE",
+  //     }).then(async (res) => {
+  //       //user has posted jobs
+  //       if (res.status === 200) {
+  //         setMyJobs((prevJobs) => prevJobs.filter((job) => job._id !== _id));
+  //         setAlertData({
+  //           title: "Deleted successfully",
+  //           message: "Job deleted successfully",
+  //           type: "success",
+  //         });
 
-          setIsAlertVisible(true);
-          hideAlert();
-        }
-        //server error
-        else {
-          setAlertData({
-            title: "Server error",
-            message: "Something went wrong please try again later",
-            type: "error",
-          });
+  //         setIsAlertVisible(true);
+  //         hideAlert();
+  //       }
+  //       //server error
+  //       else {
+  //         setAlertData({
+  //           title: "Server error",
+  //           message: "Something went wrong please try again later",
+  //           type: "error",
+  //         });
 
-          setIsAlertVisible(true);
-          hideAlert();
-        }
-      });
-    } catch (error) {
-      console.log("My jobs error" + error.message);
-    }
-  };
+  //         setIsAlertVisible(true);
+  //         hideAlert();
+  //       }
+  //     });
+  //   } catch (error) {
+  //     console.log("My jobs error" + error.message);
+  //   }
+  // };
   //handle click on job listed in table
   const handleOnJobClick = (job) => {
     const params = new URLSearchParams();
@@ -94,6 +93,7 @@ function MyJobs() {
 
   useEffect(()=>{
     getJobs()
+    // eslint-disable-next-line
   },[])
 
 
