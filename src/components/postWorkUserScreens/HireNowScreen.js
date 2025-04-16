@@ -42,39 +42,43 @@ function HireNowScreen() {
     setWorkerHireData({ ...workerHireData, [name]: value });
   };
 
-  const getMyJobs = () => {
+  const getMyJobs = async () => {
+    setIsLoading(true); // Show loading spinner while fetching jobs
     try {
-      fetch(`http://localhost:2000/job/get-user-job/${uidParam}`).then(
-        async (res) => {
-          //user has posted jobs
-          if (res.status === 200) {
-            const data = await res.json();
-            setMyJobs(data.jobs);
-            console.log(data);
-          }
-          //server error
-          else {
-            setAlertData({
-              title: "Server error",
-              message: "Something went wrong please try again later",
-              type: "error",
-            });
-
-            setIsAlertVisible(true);
-            hideAlert();
-          }
-          setIsLoading(false);
-        }
+      const res = await fetch(
+        `http://localhost:2000/job/get-user-job/${uidParam}`
       );
+
+      if (res.status === 200) {
+        const data = await res.json();
+        setMyJobs(data.jobs);
+        console.log(data);
+      } else {
+        setAlertData({
+          title: "Server error",
+          message: "Something went wrong, please try again later",
+          type: "error",
+        });
+        setIsAlertVisible(true);
+        hideAlert();
+      }
     } catch (error) {
-      console.log("My jobs error" + error.message);
-      setIsLoading(false);
+      console.error("My jobs error:", error.message);
+      setAlertData({
+        title: "Error",
+        message: "Unable to fetch jobs. Please try again.",
+        type: "error",
+      });
+      setIsAlertVisible(true);
+      hideAlert();
+    } finally {
+      setIsLoading(false); // Hide loading spinner regardless of success or failure
     }
   };
 
   //funtion to hire worker
   const hireWorker = async () => {
-    setIsLoading(true);
+    setIsLoading(true); // Show loading spinner while hiring worker
     const uid = await decodeJwtToken()._id;
     const payload = {
       uid,
@@ -89,34 +93,53 @@ function HireNowScreen() {
       jobPrice: workerHireData.price,
       jobStatus: "Pending",
     };
-    fetch("http://localhost:2000/hire/hire-now", {
-      method: "POST",
-      body: JSON.stringify(payload),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).then(async (res) => {
+
+    try {
+      const res = await fetch("http://localhost:2000/hire/hire-now", {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
       if (res.status === 200) {
         setAlertData({
           title: "Success",
-          message: "Worker is hired Successfully",
+          message: "Worker hired successfully!",
           type: "success",
         });
         setIsAlertVisible(true);
         hideAlert();
-        if (selectedJob._id) await deleteJob(selectedJob._id);
-        navigate("/my-orders");
-      } else {
-        setAlertData({
-          title: "Error",
-          message: "Something went wrong",
-          type: "error",
-        });
-        setIsAlertVisible(true);
-        hideAlert();
+
+        // Delete job if the job was selected previously
+        if(selectedJob._id){
+          await deleteJob(payload.jobId);
+        }
+
+        navigate("/my-orders"); // Redirect to my orders page
       }
-      setIsLoading(false);
-    });
+      //  else {
+      //   setAlertData({
+      //     title: "Error",
+      //     message: "Something went wrong while hiring the worker.",
+      //     type: "error",
+      //   });
+      //   setIsAlertVisible(true);
+      //   hideAlert();
+      // }
+    } catch (error) {
+      console.error("Error hiring worker:", error.message);
+      setAlertData({
+        title: "Error",
+        message: "Unable to hire worker. Please try again.",
+        type: "error",
+      });
+      setIsAlertVisible(true);
+      hideAlert();
+    } finally {
+      setIsLoading(false); // Hide loading spinner regardless of success or failure
+    }
   };
 
   //function to handle post button click

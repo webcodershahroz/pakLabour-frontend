@@ -20,6 +20,8 @@ function VerifyNumber({ route }) {
   const [isLoading, setIsLoading] = useState(false);
   const [editEmail, setEditEmail] = useState(false);
   const [userOtp, setUserOtp] = useState("");
+  const [emailSent, setEmailSent] = useState(false);
+
 
   const navigate = useNavigate();
 
@@ -32,43 +34,47 @@ function VerifyNumber({ route }) {
       email,
       password,
     };
-    fetch("http://localhost:2000/auth/signup", {
-      method: "POST",
-      body: JSON.stringify(payload),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then(async (res) => {
-        //navigate to dashboard
-        if (res.status === 200) {
-          try {
-            const data = await res.json();
-            localStorage.setItem("token", JSON.stringify(data));
-            navigate("/dashboard");
-          } catch (error) {
-            console.log("Local storage " + error.message);
-          }
-        }
-        //server error
-        else {
-          setAlertData({
-            title: "Server error",
-            message: "Something went wrong please try again later",
-            type: "error",
-          });
-
-          setIsAlertVisible(true);
-          hideAlert();
-        }
-      })
-      .catch((err) => {
-        console.log("create new account error " + err.message);
+  
+    setIsLoading(true);
+  
+    try {
+      const res = await fetch("http://localhost:2000/auth/signup", {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
+  
+      if (res.status === 200) {
+        const data = await res.json();
+        localStorage.setItem("token", JSON.stringify(data));
+        navigate("/dashboard");
+      } else {
+        setAlertData({
+          title: "Server error",
+          message: "Something went wrong, please try again later",
+          type: "error",
+        });
+        setIsAlertVisible(true);
+        hideAlert();
+      }
+    } catch (err) {
+      console.log("Create account error: " + err.message);
+      setAlertData({
+        title: "Network error",
+        message: "Could not connect to the server",
+        type: "error",
+      });
+      setIsAlertVisible(true);
+      hideAlert();
+    } finally {
+      setIsLoading(false);
+    }
   };
+  
   //verify otp and create account
   const verifyOtpAndCreateAccount = async () => {
-    setIsLoading(true);
     if (otp === userOtp) {
       await createAccount();
     } else {
@@ -81,7 +87,6 @@ function VerifyNumber({ route }) {
       setIsAlertVisible(true);
       hideAlert();
     }
-    setIsLoading(false);
   };
 
   //handle create button click
@@ -101,13 +106,16 @@ function VerifyNumber({ route }) {
     }
   };
 
-  //useEffect send email to user provided mail to verify account
+
   useEffect(() => {
     const callSendEmail = async () => {
-      await sendEmail(email);
+      if (!emailSent) {
+        await sendEmail(email);
+        setEmailSent(true);
+      }
     };
     callSendEmail();
-  }, []);
+  }, [emailSent, email]);
   return (
     <>
       {isAlertVisible && <Alert alertData={alertData} />}
@@ -153,7 +161,7 @@ function VerifyNumber({ route }) {
                           className={`bg-brandcolor mt-1 w-1/3 flex items-center justify-center py-2 rounded-full font-medium`}
                           onClick={() => {
                             setEditEmail(false);
-                            sendEmail();
+                            sendEmail(email);
                           }}
                         >
                           Okay

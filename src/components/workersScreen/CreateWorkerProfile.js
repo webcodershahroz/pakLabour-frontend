@@ -46,54 +46,57 @@ function CreateWorkerProfile() {
   //funtion to hire worker
   const createWorkerProfile = async () => {
     setIsLoading(true);
-    const userId = await decodeJwtToken()._id;
-    const formData = new FormData();
-    formData.append("user", userId);
-    formData.append("workerAnalytics", userId);
-    formData.append("workerTagline", workerProfileData.workerTagline);
-    formData.append("workerDescription", workerProfileData.workerDescription);
-    formData.append("workerLocation", workerProfileData.workerLocation);
-    formData.append("workerCategory", workerProfileData.workerCategory);
-    formData.append("workerPhoneno", workerProfileData.workerPhoneno);
-
-    if (pictureUrl) formData.append("picture", pictureUrl);
+  
     try {
-      fetch("http://localhost:2000/worker/create-worker-profile", {
+      const userId = await decodeJwtToken()._id;
+      const formData = new FormData();
+      formData.append("user", userId);
+      formData.append("workerAnalytics", userId);
+      formData.append("workerTagline", workerProfileData.workerTagline);
+      formData.append("workerDescription", workerProfileData.workerDescription);
+      formData.append("workerLocation", workerProfileData.workerLocation);
+      formData.append("workerCategory", workerProfileData.workerCategory);
+      formData.append("workerPhoneno", workerProfileData.workerPhoneno);
+  
+      if (pictureUrl) formData.append("picture", pictureUrl);
+  
+      const res = await fetch("http://localhost:2000/worker/create-worker-profile", {
         method: "POST",
         body: formData,
-      }).then(async (res) => {
-        if (res.status === 201) {
-          setAlertData({
-            title: "Success",
-            message: "Profile Created Successfully",
-            type: "success",
-          });
-          setIsAlertVisible(true);
-          hideAlert();
-          // navigate('/my-jobs');
-        } else {
-          const data = await res.json();
-          setAlertData({
-            title: "Error",
-            message: "There is error creating worker profile" + data.error,
-            type: "error",
-          });
-          setIsAlertVisible(true);
-          hideAlert();
-        }
-        setIsLoading(false);
       });
+  
+      if (res.status === 201) {
+        setAlertData({
+          title: "Success",
+          message: "Profile Created Successfully",
+          type: "success",
+        });
+        setIsAlertVisible(true);
+        hideAlert();
+        navigate('/my-profile');
+      } else {
+        const data = await res.json();
+        setAlertData({
+          title: "Error",
+          message: "There is an error creating worker profile: " + (data.error || ""),
+          type: "error",
+        });
+        setIsAlertVisible(true);
+        hideAlert();
+      }
     } catch (error) {
       setAlertData({
         title: "Internet error",
-        message: "Check your internet error and try again" + error.message,
+        message: "Check your internet connection and try again: " + error.message,
         type: "error",
       });
       setIsAlertVisible(true);
       hideAlert();
+    } finally {
       setIsLoading(false);
     }
   };
+  
 
   //function to handle post button click
   const handleCreateProfileButtonClick = async () => {

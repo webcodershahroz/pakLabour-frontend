@@ -24,60 +24,60 @@ function CreateNewAccount() {
 
   //funtion to create a new account
   const checkIsUserExists = async () => {
-    const payload = {
-      email,
-    };
+    const payload = { email };
     setIsLoading(true);
-    fetch("http://localhost:2000/auth/user-exists", {
-      method: "POST",
-      body: JSON.stringify(payload),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then(async (res) => {
-        //show warning of account already exists
-        if (res.status === 404) {
-          navigate("/auth/verify-number", {
-            state: {
-              name,
-              email,
-              userLocation,
-              accountType,
-              password,
-            },
-          });
-        }
-        //navigate to dashboard
-        else if (res.status === 200) {
-          setAlertData({
-            title: "Duplicate email",
-            message:
-              "Another account is using this email try to signup with another email",
-            type: "warning",
-          });
-
-          setIsAlertVisible(true);
-          hideAlert();
-        }
-        //server error
-        else {
-          setAlertData({
-            title: "Server error",
-            message: "Something went wrong please try again later",
-            type: "error",
-          });
-
-          setIsAlertVisible(true);
-          hideAlert();
-        }
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.log("user exists error" + err.message);
-        setIsLoading(false);
+  
+    try {
+      const res = await fetch("http://localhost:2000/auth/user-exists", {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
+  
+      if (res.status === 404) {
+        navigate("/auth/verify-number", {
+          state: {
+            name,
+            email,
+            userLocation,
+            accountType,
+            password,
+          },
+        });
+      } else if (res.status === 200) {
+        setAlertData({
+          title: "Duplicate email",
+          message:
+            "Another account is using this email. Try signing up with a different one.",
+          type: "warning",
+        });
+        setIsAlertVisible(true);
+        hideAlert();
+      } else {
+        setAlertData({
+          title: "Server error",
+          message: "Something went wrong, please try again later.",
+          type: "error",
+        });
+        setIsAlertVisible(true);
+        hideAlert();
+      }
+    } catch (err) {
+      console.log("User exists error: " + err.message);
+      setAlertData({
+        title: "Network error",
+        message: "Could not connect to the server",
+        type: "error",
+      });
+      setIsAlertVisible(true);
+      hideAlert();
+    } finally {
+      setIsLoading(false);
+    }
   };
+  
 
   const handleNextButtonClick = async () => {
     if (email.length > 0 && password.length > 0 && accountType.length > 0)

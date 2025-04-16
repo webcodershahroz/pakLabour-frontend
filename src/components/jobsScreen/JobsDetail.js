@@ -26,37 +26,37 @@ function JobsDetail() {
     params.append("title", titleParam);
     params.append("type", type);
     params.append("id", idParam);
-    params.append("ref", "my-jobs");
 
     navigate(`/job?${params.toString()}`);
   };
 
 
-  const getJobDetails = () => {
+  const getJobDetails = async () => {
     setIsLoading(true);
     try {
-      fetch(`http://localhost:2000/job/get-job/${idParam}`).then(
-        async (res) => {
-          if (res.status === 200) {
-            const data = await res.json();
-            console.log(data);
-            setJobDetails(data.jobs[0]);
-          }
-
-          setIsLoading(false);
-        }
-      );
+      const res = await fetch(`http://localhost:2000/job/get-job/${idParam}`);
+  
+      if (res.status === 200) {
+        const data = await res.json();
+        setJobDetails(data.jobs[0]);
+        console.log(data.jobs[0]);
+      } else {
+        console.error("Failed to fetch job details. Status:", res.status);
+      }
     } catch (error) {
+      console.error("Error fetching job details:", error.message);
+    } finally {
       setIsLoading(false);
     }
   };
+  
 
   useEffect(() => {
     if (isUserLoggedIn()) {
       setUserDetails(decodeJwtToken());
-      getJobDetails();
     }
-  }, []);
+    getJobDetails();
+  },[]);
 
   return (
     <>
@@ -172,19 +172,6 @@ function JobsDetail() {
                             jobDetails.pictures.length
                           }`}
                         </div>
-                        {/* <div className="flex gap-2 flex-wrap mt-3">
-                          {jobDetails.pictures.map((pu) => {
-                            return (
-                              <img
-                                src={`http://localhost:2000/${pu}`}
-                                className="object-contain"
-                                height={100}
-                                width={100}
-                                alt="d"
-                              />
-                            );
-                          })}
-                        </div> */}
                       </div>
                     </div>
 

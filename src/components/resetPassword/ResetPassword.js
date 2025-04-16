@@ -48,61 +48,61 @@ function ResetPassword() {
     }
   };
   //change password fetch function
-  const changePassword = () => {
+  const changePassword = async () => {
     const payload = {
       email,
       password,
     };
+  
     setIsLoading(true);
-    fetch("http://localhost:2000/auth/change-password", {
-      method: "POST",
-      body: JSON.stringify(payload),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then(async (res) => {
-        //no account found
-        if (res.status === 404) {
-          setAlertData({
-            title: "Account not found",
-            message:
-              "The account for email address you are trying to reset password is not registered",
-            type: "error",
-          });
-
-          setIsAlertVisible(true);
-          hideAlert();
-          // navigate("/");
-        } else if (res.status === 200) {
-          setAlertData({
-            title: "Updated",
-            message: "Password updated successfully",
-            type: "error",
-          });
-
-          setIsAlertVisible(true);
-          hideAlert();
-          navigate("/auth/signin");
-        }
-        //server error
-        else {
-          setAlertData({
-            title: "Server error",
-            message: "Something went wrong please try again later",
-            type: "error",
-          });
-
-          setIsAlertVisible(true);
-          hideAlert();
-        }
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.log("create new account error " + err.message);
-        setIsLoading(false);
+  
+    try {
+      const res = await fetch("http://localhost:2000/auth/change-password", {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
+  
+      if (res.status === 404) {
+        setAlertData({
+          title: "Account Not Found",
+          message: "The email address you entered is not registered.",
+          type: "error",
+        });
+      } else if (res.status === 200) {
+        setAlertData({
+          title: "Password Updated",
+          message: "Your password was updated successfully.",
+          type: "success", // fixed here
+        });
+        navigate("/auth/signin");
+      } else {
+        setAlertData({
+          title: "Server Error",
+          message: "Something went wrong. Please try again later.",
+          type: "error",
+        });
+      }
+  
+      setIsAlertVisible(true);
+      hideAlert();
+  
+    } catch (err) {
+      console.error("Change password error:", err.message);
+      setAlertData({
+        title: "Network Error",
+        message: "Check your internet connection and try again.",
+        type: "error",
+      });
+      setIsAlertVisible(true);
+      hideAlert();
+    } finally {
+      setIsLoading(false);
+    }
   };
+  
   return (
     <>
       {isAlertVisible && <Alert alertData={alertData} />}

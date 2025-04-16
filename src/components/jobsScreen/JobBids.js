@@ -11,23 +11,25 @@ function JobBids() {
   const [JobBids, setJobBids] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const getJobBids = () => {
+  const getJobBids = async () => {
     setIsLoading(true);
     try {
-      fetch(`http://localhost:2000/apply/get-job-bids/${idParam}`).then(
-        async (res) => {
-          if (res.status === 200) {
-            const data = await res.json();
-            setJobBids(data.bids);
-            console.log(data);
-          }
-          setIsLoading(false);
-        }
-      );
+      const res = await fetch(`http://localhost:2000/apply/get-job-bids/${idParam}`);
+      
+      if (res.status === 200) {
+        const data = await res.json();
+        setJobBids(data.bids);
+        console.log(data);
+      } else {
+        console.error("Failed to fetch job bids. Status:", res.status);
+      }
     } catch (error) {
+      console.error("Error fetching job bids:", error.message);
+    } finally {
       setIsLoading(false);
     }
   };
+  
 
   useEffect(() => {
     getJobBids();
@@ -69,7 +71,7 @@ function JobBids() {
                       <span className="text-gray-500 font-bold">
                         PKR {bid.jobPrice}
                         <span className="text-sm font-normal">
-                          in{" "}
+                          {" "}in{" "}
                           {bid.jobDuration == 1
                             ? bid.jobDuration + " day"
                             : bid.jobDuration + " days"}

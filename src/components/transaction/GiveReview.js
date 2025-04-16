@@ -16,17 +16,16 @@ function GiveReview() {
     setAlertData,
     hideAlert,
     setIsAlertVisible,
-    // updateRatings,
     decodeJwtToken,
   } = useContext(StateContext);
 
   const handleDoneButtonClicked = async () => {
     console.log("clicked");
-    setIsLoading(true);
+    // setIsLoading(true);
     if (ratings.match("[0-4]{1}.[0-9]{1}") && review.length > 0) {
       await updateRatings();
       setIsLoading(false);
-      navigate("/my-orders");
+
     } else {
       setAlertData({
         title: "Warning",
@@ -47,81 +46,104 @@ function GiveReview() {
       reviewedProfileId: stateData.pid._id,
       reviewMessage: review,
     };
+
     try {
-      fetch(`http://localhost:2000/review/set-review`, {
+      const res = await fetch(`http://localhost:2000/review/set-review`, {
         method: "POST",
         body: JSON.stringify(payload),
         headers: {
           "Content-Type": "application/json",
         },
-      }).then(async res => {
-        await updateOrderStatus()
-      })
-    } catch {
-      // setIsLoading(false);
+      });
+
+      if (res.ok) {
+        await updateOrderStatus();
+      } else {
+        console.error("Failed to post review.");
+      }
+    } catch (err) {
+      console.error("Error posting review:", err);
     }
   };
 
-  //function to update Order status
   const updateOrderStatus = async () => {
     const payload = {
       orderId: stateData._id,
     };
+
     try {
-      fetch(`http://localhost:2000/hire/update-order-status`, {
-        method: "POST",
-        body: JSON.stringify(payload),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }).then(async () => {
-        await deleteJob(stateData.jobId)
-      });
-    } catch {
+      const res = await fetch(
+        `http://localhost:2000/hire/update-order-status`,
+        {
+          method: "POST",
+          body: JSON.stringify(payload),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (res.ok) {
+        // await deleteJob(stateData.jobId);
+      window.location.href = "/my-orders";
+
+      } else {
+        console.error("Failed to update order status.");
+      }
+    } catch (err) {
+      console.error("Error updating order status:", err);
     }
   };
 
-    //function to update worker analytics
   const updateRatings = async () => {
-    const userId = await decodeJwtToken()._id
+    const userId = stateData.wid._id
     const payload = {
       user: userId,
-      averageRating : ratings
-    }
-    console.log(payload)
+      averageRating: Number(ratings),
+    };
+
+    console.log("Updating ratings with:", payload);
+
     try {
-      fetch(`http://localhost:2000/review/update-analytics`, {
+      const res = await fetch(`http://localhost:2000/review/update-analytics`, {
         method: "POST",
         body: JSON.stringify(payload),
         headers: {
           "Content-Type": "application/json",
         },
-      }).then(async (res) => {
-        await postReviewMessage()
       });
-    } catch (error) {}
-  
-  };
 
-  //function to delete job
-  //delete job using _id
-  const deleteJob = async (_id) => {
-    try {
-      fetch(`http://localhost:2000/job/delete-job/${_id}`, {
-        method: "DELETE",
-      }).then(async (res) => {
-        setAlertData({
-          title: "Success",
-          message: "Transaction successfully completed",
-          type: "success",
-        });
-  
-        setIsAlertVisible(true);
-        hideAlert();
-      });
-    } catch (error) {
+      if (res.ok) {
+        await postReviewMessage();
+      } else {
+        console.error("Failed to update ratings.");
+      }
+    } catch (err) {
+      console.error("Error updating ratings:", err);
     }
   };
+
+  // const deleteJob = async (_id) => {
+  //   try {
+  //     const res = await fetch(`http://localhost:2000/job/delete-job/${_id}`, {
+  //       method: "DELETE",
+  //     });
+
+  //     if (res.ok) {
+  //       setAlertData({
+  //         title: "Success",
+  //         message: "Transaction successfully completed",
+  //         type: "success",
+  //       });
+  //       setIsAlertVisible(true);
+  //       hideAlert();
+  //     } else {
+  //       console.error("Failed to delete job.");
+  //     }
+  //   } catch (err) {
+  //     console.error("Error deleting job:", err);
+  //   }
+  // };
 
   useEffect(() => {
     setStateData(location.state);

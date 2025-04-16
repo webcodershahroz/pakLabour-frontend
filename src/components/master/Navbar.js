@@ -21,19 +21,15 @@ function Navbar() {
     name: "",
     email: "",
     type: "",
+    picture:"",
   });
   const location = useLocation();
-
-  //get picture of url to set in logo
-  const getPictureUrl = async () => {
-    const picture = await decodeJwtToken().picture;
-    setPictureUrl(picture);
-  };
 
   useEffect(() => {
     if (isUserLoggedIn()) {
       setUserDetails(decodeJwtToken());
-      getPictureUrl();
+      console.log(userDetails.picture)
+      // getPictureUrl();
     }
   }, []);
 
@@ -219,13 +215,13 @@ function Navbar() {
                 <Link className="mr-6" to={"/message"}>
                   <i
                     className="fa-classic fa-envelope fa-xl"
-                    style={{ color: "gray" }}
+                    style={{ color: "#42f5aa" }}
                   ></i>
                 </Link>
                 <div>
                   <button
                     onClick={() => setShowProfileMenu((prev) => !prev)}
-                    className="h-[48px] w-[48px] border-2 border-gray-200 rounded-full"
+                    className="h-[48px] w-[48px] rounded-full"
                   >
                     <img
                       className="rounded-full p-1"

@@ -63,38 +63,34 @@ function SearchResults() {
     navigate(`/search?${params.toString()}`);
   };
 
-  //function to get the workers
   const getWorkers = async () => {
     setIsLoading(true);
     try {
-      fetch(`http://localhost:2000/worker/get-workers?query=${query}`).then(
-        async (res) => {
-          const data = await res.json();
-          setSearchResultWorkers(data);
-          setPreviousWorkerState(data);
-          setIsLoading(false);
-        }
-      );
+      const res = await fetch(`http://localhost:2000/worker/get-workers?query=${query}`);
+      const data = await res.json();
+      setSearchResultWorkers(data);
+      setPreviousWorkerState(data);
     } catch (error) {
+      console.error("Error fetching workers:", error);
+    } finally {
       setIsLoading(false);
     }
   };
-
+  
   const getJobs = async () => {
     setIsLoading(true);
     try {
-      fetch(`http://localhost:2000/job/get-job?query=${query}`).then(
-        async (res) => {
-          const data = await res.json();
-          setSearchResultJobs(data);
-          setPreviousJobState(data);
-          setIsLoading(false);
-        }
-      );
+      const res = await fetch(`http://localhost:2000/job/get-job?query=${query}`);
+      const data = await res.json();
+      setSearchResultJobs(data);
+      setPreviousJobState(data);
     } catch (error) {
+      console.error("Error fetching jobs:", error);
+    } finally {
       setIsLoading(false);
     }
   };
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -109,14 +105,14 @@ function SearchResults() {
 
   return (
     <>
-      <div className="container mx-auto h-[fit-content] w-full mb-5">
+      <div className="container mx-auto h-[fit-content] w-full my-5">
         <div>
           <strong className="font-bold text-3xl mb-7 block">
             Search results for {query}
           </strong>
         </div>
-        <div className=" border-b flex justify-between border-gray">
-          <div className="tab-header  flex gap-6 mb-5">
+        <div className=" border-b flex justify-between border-gray mb-5">
+          <div className="tab-header  flex gap-6 ">
             <button
               onClick={() => {
                 handleClickOnJobOrWorker("jobs");

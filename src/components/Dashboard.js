@@ -9,19 +9,41 @@ function Dashboard() {
     email: "",
     type: "",
   });
-  const { updateWorkerAnalytics,workerAnalytics } = useContext(StateContext);
+  const {decodeJwtToken  } = useContext(StateContext);
 
-  //decode jwt token from localstorage
-  const decodeJwtToken = () => {
-    const token = localStorage.getItem("token");
-    const data = jwtDecode(token);
-    return data.user;
+  const updateLastActive = async () => {
+    try {
+      const userId = await decodeJwtToken()._id; // Decode user ID from JWT token
+      const payload = { user: userId };
+  
+      const res = await fetch("http://localhost:2000/review/update-lastActive", {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  
+      const data = await res.json();
+  
+      if (res.status === 200) {
+        console.log("Last active updated successfully:", data);
+      } else {
+        console.error("Error updating last active:", data.message);
+      }
+    } catch (error) {
+      console.error("Error in updateLastActive:", error.message);
+    }
   };
+  
 
   useEffect(() => {
-    setUserDetails(decodeJwtToken());
-    console.log(decodeJwtToken()._id)
-      
+    const jwtData = decodeJwtToken()
+    setUserDetails(jwtData);
+    console.log(jwtData._id)
+    if(jwtData.type === "worker"){
+      updateLastActive()
+    }  
   }, []);
   return (
     <div className="h-[70vh] mb-14">

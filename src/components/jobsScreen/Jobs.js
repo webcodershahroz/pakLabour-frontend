@@ -59,12 +59,12 @@ function Jobs(props) {
                 </>
               );
             })}
-            {!isLoading && props.data.searchResultJobs.length === 0 && (
+            {props.data.searchResultJobs.length === 0 && (
               <div className="w-full text-center">
                 <p className="text-3xl">
                   {props.data.location.length > 0
-                    ? `No workers found in ${props.data.location}`
-                    : `No worker found for ${props.data.query}`}
+                    ? `No jobs found in ${props.data.location}`
+                    : `No jobs found for ${props.data.query}`}
                 </p>
               </div>
             )}

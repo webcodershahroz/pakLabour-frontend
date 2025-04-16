@@ -17,35 +17,40 @@ function MyJobs() {
   } = useContext(StateContext);
 
   //get all the jobs
-  const getJobs = () => {
-    setIsLoading(true);
+  const getJobs = async () => {
+    setIsLoading(true); // Show loading spinner
     const userId = decodeJwtToken()._id;
+  
     try {
-      fetch(`http://localhost:2000/job/get-user-job/${userId}`).then(async (res) => {
-        //user has posted jobs
-        if (res.status === 200) {
-          const data = await res.json();
-          setMyJobs(data.jobs);
-          console.log(data.jobs)
-        }
-        //server error
-        else {
-          setAlertData({
-            title: "Server error",
-            message: "Something went wrong please try again later",
-            type: "error",
-          });
-
-          setIsAlertVisible(true);
-          hideAlert();
-        }
-        setIsLoading(false);
-      });
+      const res = await fetch(`http://localhost:2000/job/get-user-job/${userId}`);
+  
+      if (res.status === 200) {
+        const data = await res.json();
+        setMyJobs(data.jobs);
+        console.log(data.jobs);
+      } else {
+        setAlertData({
+          title: "Server error",
+          message: "Something went wrong, please try again later.",
+          type: "error",
+        });
+        setIsAlertVisible(true);
+        hideAlert();
+      }
     } catch (error) {
-      console.log("My jobs error" + error.message);
-      setIsLoading(false);
+      console.error("My jobs error:", error.message);
+      setAlertData({
+        title: "Error",
+        message: "Unable to fetch jobs. Please try again.",
+        type: "error",
+      });
+      setIsAlertVisible(true);
+      hideAlert();
+    } finally {
+      setIsLoading(false); // Ensure loading state is turned off after request completion
     }
   };
+  
 
   // //delete job using _id
   // const deleteJob = (_id) => {
@@ -105,7 +110,7 @@ function MyJobs() {
         <strong className="font-bold text-3xl block ml-24">My jobs</strong>
         <Link
           to={"/post-job"}
-          className="bg-brandcolor text-lg rounded-full px-3 py-1 mr-24"
+          className="bg-brandcolor text-lg rounded-md px-3 py-1 mr-24"
         >
           Post a job
         </Link>
@@ -172,19 +177,6 @@ function MyJobs() {
                           <td className="px-6 py-4">
                             {job.createdAt.slice(0, 10)}
                           </td>
-                          {/* <td className="px-6 py-4">
-                            <div>
-                              <i className="fa-solid fa-pen mr-4 cursor-pointer"></i>
-                              <i
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  deleteJob(job._id);
-                                }}
-                                className="fa-solid fa-trash cursor-pointer"
-                                style={{ color: "#ff0000" }}
-                              ></i>
-                            </div>
-                          </td> */}
                         </tr>
                       </>
                     );
@@ -193,9 +185,9 @@ function MyJobs() {
               </table>
             </div>
 
-            {myJobs.length === 0 && (
+            {!isLoading && myJobs.length === 0 && (
               <div className="w-full text-center mt-4">
-                <p className="text-3xl">You don't have any posted job</p>
+                <p className="text-3xl">No jobs. Post a new job</p>
               </div>
             )}
           </div>

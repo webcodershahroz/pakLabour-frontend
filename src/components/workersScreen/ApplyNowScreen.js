@@ -34,23 +34,27 @@ function ApplyNowScreen() {
 
   //funtion to hire worker
   const applyNow = async () => {
-    setIsLoading(true)
-    const user = await decodeJwtToken()._id;
-    const payload = {
-      user,
-      jobId: idParam,
-      jobTitle: applyNowData.title,
-      jobDescription: applyNowData.description,
-      jobDuration: applyNowData.duration,
-      jobPrice: applyNowData.price,
-    };
-    fetch("http://localhost:2000/apply/apply-now", {
-      method: "POST",
-      body: JSON.stringify(payload),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).then((res) => {
+    setIsLoading(true);
+  
+    try {
+      const user = await decodeJwtToken()._id;
+      const payload = {
+        user,
+        jobId: idParam,
+        jobTitle: applyNowData.title,
+        jobDescription: applyNowData.description,
+        jobDuration: applyNowData.duration,
+        jobPrice: applyNowData.price,
+      };
+  
+      const res = await fetch("http://localhost:2000/apply/apply-now", {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  
       if (res.status === 200) {
         setAlertData({
           title: "Success",
@@ -59,20 +63,24 @@ function ApplyNowScreen() {
         });
         setIsAlertVisible(true);
         hideAlert();
-        navigate('/my-applied-jobs')
+        navigate("/my-applied-jobs");
       } else {
-        setAlertData({
-          title: "Error",
-          message: "Something went wrong",
-          type: "error",
-        });
-        setIsAlertVisible(true);
-        hideAlert();
+        throw new Error("Something went wrong");
       }
-      setIsLoading(false)
-    });
+    } catch (error) {
+      console.error("Apply Error:", error);
+      setAlertData({
+        title: "Error",
+        message: error.message,
+        type: "error",
+      });
+      setIsAlertVisible(true);
+      hideAlert();
+    } finally {
+      setIsLoading(false);
+    }
   };
-
+  
   //function to handle post button click
   const handleApplyNowButtonClick = async () => {
     if (
@@ -148,7 +156,7 @@ function ApplyNowScreen() {
                 htmlFor="description"
                 className="block text-sm/6 font-medium text-gray-900"
               >
-                Description
+                Cover letter
               </label>
               <div className="mt-2">
                 <textarea

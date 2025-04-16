@@ -19,67 +19,73 @@ function WorkerOrders() {
   } = useContext(StateContext);
 
   //get all the jobs for worker side profile
-  const getWorkerOrders = () => {
+  const getWorkerOrders = async () => {
     setIsLoading(true);
     const userId = decodeJwtToken()._id;
+  
     try {
-      fetch(`http://localhost:2000/worker/get-worker-orders/${userId}`).then(
-        async (res) => {
-          if (res.status === 200) {
-            const data = await res.json();
-            setOrders(data.workerOrders);
-          }
-          //server error
-          else {
-            setAlertData({
-              title: "Server error",
-              message: "Something went wrong please try again later",
-              type: "error",
-            });
-
-            setIsAlertVisible(true);
-            hideAlert();
-          }
-          setIsLoading(false);
-        }
-      );
+      const res = await fetch(`http://localhost:2000/worker/get-worker-orders/${userId}`);
+  
+      if (res.status === 200) {
+        const data = await res.json();
+        setOrders(data.workerOrders);
+      } else {
+        setAlertData({
+          title: "Server error",
+          message: "Something went wrong, please try again later",
+          type: "error",
+        });
+        setIsAlertVisible(true);
+        hideAlert();
+      }
     } catch (error) {
-      console.log("My worker profile error" + error.message);
+      console.log("getWorkerOrders error: " + error.message);
+      setAlertData({
+        title: "Network error",
+        message: "Could not connect to the server",
+        type: "error",
+      });
+      setIsAlertVisible(true);
+      hideAlert();
+    } finally {
       setIsLoading(false);
     }
   };
-
+  
   //get all the jobs for post work side profile
-  const getPostWorkOrders = () => {
+  const getPostWorkOrders = async () => {
     setIsLoading(true);
     const userId = decodeJwtToken()._id;
+  
     try {
-      fetch(`http://localhost:2000/worker/get-postwork-orders/${userId}`).then(
-        async (res) => {
-          if (res.status === 200) {
-            const data = await res.json();
-            setOrders(data.postWorkOrders);
-          }
-          //server error
-          else {
-            setAlertData({
-              title: "Server error",
-              message: "Something went wrong please try again later",
-              type: "error",
-            });
-
-            setIsAlertVisible(true);
-            hideAlert();
-          }
-          setIsLoading(false);
-        }
-      );
+      const res = await fetch(`http://localhost:2000/worker/get-postwork-orders/${userId}`);
+  
+      if (res.status === 200) {
+        const data = await res.json();
+        setOrders(data.postWorkOrders);
+      } else {
+        setAlertData({
+          title: "Server error",
+          message: "Something went wrong, please try again later",
+          type: "error",
+        });
+        setIsAlertVisible(true);
+        hideAlert();
+      }
     } catch (error) {
-      console.log("My worker profile error" + error.message);
+      console.log("getPostWorkOrders error: " + error.message);
+      setAlertData({
+        title: "Network error",
+        message: "Could not connect to the server",
+        type: "error",
+      });
+      setIsAlertVisible(true);
+      hideAlert();
+    } finally {
       setIsLoading(false);
     }
   };
-
+  
   const handleClickOnOrder = (order) => {
     console.log(order.jobStatus.trim())
     if (decodeJwtToken().type === "postWork" && order.jobStatus.trim() === "Pending") {
@@ -101,7 +107,7 @@ function WorkerOrders() {
   return (
     <>
       {isAlertVisible && <Alert alertData={alertData} />}
-      {/* workerProfiles */}
+      {/* workerorders */}
       <div>
         <div className="flex justify-between items-center my-10">
           <strong className="font-bold text-3xl block ml-24">My Orders</strong>
@@ -219,9 +225,9 @@ function WorkerOrders() {
                 </table>
               </div>
 
-              {orders.length === 0 && (
+              {!isLoading && orders.length === 0 && (
                 <div className="w-full text-center mt-4">
-                  <p className="text-3xl">You have no orders</p>
+                  <p className="text-3xl">No orders yet</p>
                 </div>
               )}
             </div>

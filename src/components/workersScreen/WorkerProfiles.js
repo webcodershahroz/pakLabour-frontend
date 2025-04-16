@@ -19,81 +19,93 @@ function WorkerProfiles() {
     decodeJwtToken,
   } = useContext(StateContext);
 
-  //get all the jobs
-  const getMyWorkerProfile = () => {
+  // get all the jobs posted by the worker
+  const getMyWorkerProfile = async () => {
     setIsLoading(true);
     const userId = decodeJwtToken()._id;
-    try {
-      fetch(`http://localhost:2000/worker/get-worker-profiles/${userId}`).then(
-        async (res) => {
-          //user has posted jobs
-          if (res.status === 200) {
-            const data = await res.json();
-            setMyWorkerProfile(data.worker);
-            console.log(data.worker)
-          }
-          //server error
-          else {
-            setAlertData({
-              title: "Server error",
-              message: "Something went wrong please try again later",
-              type: "error",
-            });
 
-            setIsAlertVisible(true);
-            hideAlert();
-          }
-          setIsLoading(false);
-        }
+    try {
+      const res = await fetch(
+        `http://localhost:2000/worker/get-worker-profiles/${userId}`
       );
+
+      if (res.status === 200) {
+        const data = await res.json();
+        setMyWorkerProfile(data.worker);
+        console.log(data.worker);
+      } else {
+        setAlertData({
+          title: "Server error",
+          message: "Something went wrong, please try again later",
+          type: "error",
+        });
+        setIsAlertVisible(true);
+        hideAlert();
+      }
     } catch (error) {
-      console.log("My worker profile error" + error.message);
+      console.log("My worker profile error: " + error.message);
+      setAlertData({
+        title: "Network error",
+        message: "Could not connect to the server",
+        type: "error",
+      });
+      setIsAlertVisible(true);
+      hideAlert();
+    } finally {
       setIsLoading(false);
     }
   };
-  //get all the jobs
-  const getMyAppliedJobs = () => {
-    const userId = decodeJwtToken()._id;
-    try {
-      fetch(`http://localhost:2000/worker//get-worker-applied-jobs/${userId}`).then(
-        async (res) => {
-          //user has posted jobs
-          if (res.status === 200) {
-            const data = await res.json();
-            setMyAppliedJobs(data.appliedJobs);
-          }
-          //server error
-          else {
-            setAlertData({
-              title: "Server error",
-              message: "Something went wrong please try again later",
-              type: "error",
-            });
 
-            setIsAlertVisible(true);
-            hideAlert();
-          }
-          setIsLoading(false);
-        }
+  
+
+  // get all jobs the worker has applied to
+  const getMyAppliedJobs = async () => {
+    setIsLoading(true);
+    const userId = decodeJwtToken()._id;
+
+    try {
+      const res = await fetch(
+        `http://localhost:2000/worker/get-worker-applied-jobs/${userId}`
       );
+
+      if (res.status === 200) {
+        const data = await res.json();
+        setMyAppliedJobs(data.appliedJobs);
+      } else {
+        setAlertData({
+          title: "Server error",
+          message: "Something went wrong, please try again later",
+          type: "error",
+        });
+        setIsAlertVisible(true);
+        hideAlert();
+      }
     } catch (error) {
-      console.log("My worker profile error" + error.message);
+      console.log("My applied jobs error: " + error.message);
+      setAlertData({
+        title: "Network error",
+        message: "Could not connect to the server",
+        type: "error",
+      });
+      setIsAlertVisible(true);
+      hideAlert();
+    } finally {
       setIsLoading(false);
     }
   };
 
   //handle click on job listed in table
   const handleOnProfileClick = (profile) => {
-      const params = new URLSearchParams();
-      params.append('name',profile.user.name);
-      params.append('id',profile._id);
+    const params = new URLSearchParams();
+    params.append("name", profile.user.name);
+    params.append("id", profile._id);
 
-      navigate(`/worker?${params.toString()}`);
+    navigate(`/worker?${params.toString()}`);
   };
 
   useEffect(() => {
     getMyWorkerProfile();
-    getMyAppliedJobs()
+    getMyAppliedJobs();
   }, []);
 
   return (
@@ -107,7 +119,7 @@ function WorkerProfiles() {
           </strong>
           <Link
             to={"/create-worker-profile"}
-            className="bg-brandcolor text-lg rounded-full px-3 py-1 mr-24"
+            className="bg-brandcolor text-lg rounded-md px-3 py-1 mr-24"
           >
             Create a worker profile
           </Link>
@@ -180,13 +192,13 @@ function WorkerProfiles() {
                     })}
                   </tbody>
                 </table>
-              </div>
-
-              {myWorkerProfile.length === 0 && (
+              {!isLoading && myWorkerProfile.length === 0 && (
                 <div className="w-full text-center mt-4">
-                  <p className="text-3xl">You have no profiles</p>
+                  <p className="text-3xl">No profiles? Create Now</p>
                 </div>
               )}
+              </div>
+
             </div>
           )}
         </div>

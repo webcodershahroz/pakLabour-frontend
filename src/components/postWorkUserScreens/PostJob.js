@@ -57,41 +57,45 @@ function PostJob() {
     formData.append("location", jobData.location);
     formData.append("searchTags", jobData.searchTags);
 
-    if (pictureUrl) pictureUrl.forEach(picture => formData.append('pictures',picture))
+    if (pictureUrl)
+      pictureUrl.forEach((picture) => formData.append("pictures", picture));
+
+    setIsLoading(true);
 
     try {
-      fetch("http://localhost:2000/job/post-job", {
+      const res = await fetch("http://localhost:2000/job/post-job", {
         method: "POST",
         body: formData,
-      }).then(async (res) => {
-        if (res.status === 201) {
-          setAlertData({
-            title: "Success",
-            message: "Job Posted Successfully",
-            type: "success",
-          });
-          setIsAlertVisible(true);
-          hideAlert();
-          navigate("/my-jobs");
-        } else {
-          setAlertData({
-            title: "Error",
-            message: "There is error posting your job",
-            type: "error",
-          });
-          setIsAlertVisible(true);
-          hideAlert();
-        }
-        setIsLoading(false);
       });
+
+      if (res.status === 201) {
+        setAlertData({
+          title: "Success",
+          message: "Job posted successfully",
+          type: "success",
+        });
+        setIsAlertVisible(true);
+        hideAlert();
+        navigate("/my-jobs");
+      } else {
+        setAlertData({
+          title: "Error",
+          message: "There was an error posting your job",
+          type: "error",
+        });
+        setIsAlertVisible(true);
+        hideAlert();
+      }
     } catch (error) {
       setAlertData({
-        title: "Internet error",
-        message: "Check your internet error and try again",
+        title: "Network Error",
+        message: "Check your internet connection and try again",
         type: "error",
       });
       setIsAlertVisible(true);
       hideAlert();
+      console.error("Post job error:", error.message);
+    } finally {
       setIsLoading(false);
     }
   };
@@ -263,7 +267,15 @@ function PostJob() {
               <div className="flex gap-2 flex-wrap mt-3">
                 {previewUrl
                   ? previewUrl.map((pu) => {
-                      return <img src={pu} className="object-contain" height={100} width={100} alt="d" />;
+                      return (
+                        <img
+                          src={pu}
+                          className="object-contain"
+                          height={100}
+                          width={100}
+                          alt="d"
+                        />
+                      );
                     })
                   : ""}
               </div>

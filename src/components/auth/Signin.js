@@ -19,60 +19,51 @@ function Signin() {
 
   //function to login user
   const doLogin = async () => {
-    const payload = {
-      email,
-      password,
-    };
+    const payload = { email, password };
     setIsLoading(true);
-    fetch("http://localhost:2000/auth/login", {
-      method: "POST",
-      body: JSON.stringify(payload),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then(async (res) => {
-        //navigation to create new account
-        if (res.status === 404) {
-          navigate("/auth/create-new-account", { state: email });
-        }
-        //showing alert of incorrect password
-        else if (res.status === 401) {
-          setAlertData({
-            title: "Incorrect password",
-            message: "Please enter the correct password",
-            type: "error",
-          });
 
-          setIsAlertVisible(true);
-          hideAlert();
-        } else if (res.status === 200) {
-          try {
-            const data = await res.json();
-            localStorage.setItem("token", JSON.stringify(data));
-            // navigate("/dashboard");
-            window.location.href = "/dashboard";
-          } catch (error) {
-            console.log("Local storage " + error.message);
-          }
-        }
-        //server error
-        else {
-          setAlertData({
-            title: "Server error",
-            message: "Something went wrong please try again later",
-            type: "error",
-          });
-
-          setIsAlertVisible(true);
-          hideAlert();
-        }
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.log("create new account error " + err.message);
-        setIsLoading(false);
+    try {
+      const res = await fetch("http://localhost:2000/auth/login", {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: { "Content-Type": "application/json" },
       });
+
+      if (res.status === 404) {
+        navigate("/auth/create-new-account", { state: email });
+      } else if (res.status === 401) {
+        setAlertData({
+          title: "Incorrect password",
+          message: "Please enter the correct password",
+          type: "error",
+        });
+        setIsAlertVisible(true);
+        hideAlert();
+      } else if (res.status === 200) {
+        const data = await res.json();
+        localStorage.setItem("token", JSON.stringify(data));
+        window.location.href = "/dashboard";
+      } else {
+        setAlertData({
+          title: "Server error",
+          message: "Something went wrong, please try again later",
+          type: "error",
+        });
+        setIsAlertVisible(true);
+        hideAlert();
+      }
+    } catch (err) {
+      console.error("Login error:", err.message);
+      setAlertData({
+        title: "Network error",
+        message: "Could not connect to the server",
+        type: "error",
+      });
+      setIsAlertVisible(true);
+      hideAlert();
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleSignInButtonClick = async () => {
@@ -103,9 +94,9 @@ function Signin() {
 
       <div className="h-[100vh] mb-10">
         <div className="flex flex-col items-center justify-center px-6 mx-auto lg:py-0 my-10">
-        <Link to="/">
-          <img src={logo} height={70} width={82} alt="" />
-        </Link>
+          <Link to="/">
+            <img src={logo} height={70} width={82} alt="" />
+          </Link>
           <div className=" bg-white rounded-lg shadow dark:border max-w-md  dark:border-gray-700">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
               <span>

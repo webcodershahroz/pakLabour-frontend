@@ -3,9 +3,13 @@ import { StateContext } from "../../context/StateContext";
 import Alert from "../utils/Alert";
 import ActivityIndicator from "../utils/ActivityIndicator";
 
-
 function Analytics() {
-  const [workerAnalytics, setWorkerAnalytics] = useState({});
+  const [workerAnalytics, setWorkerAnalytics] = useState({
+    orderCompleted: 0,
+    averageRating: 0, // Average from reviews
+    totalEarnings: 0,
+    withdrawAmount: 0,
+  });
   const {
     decodeJwtToken,
     isAlertVisible,
@@ -17,17 +21,27 @@ function Analytics() {
   const [isLoading, setIsLoading] = useState(true);
   //get user analytics
   const getUserAnalytics = async () => {
-    const userId = await decodeJwtToken()._id;
     setIsLoading(true);
     try {
-      fetch(`http://localhost:2000/review/get-worker-analytics/${userId}`).then(
-        async (res) => {
-          const data = await res.json();
-          setWorkerAnalytics(data.workerAnalytics);
-          setIsLoading(false);
-        }
+      const userId = decodeJwtToken()._id;
+      const res = await fetch(
+        `http://localhost:2000/review/get-worker-analytics/${userId}`
       );
+
+      if (res.status === 200) {
+        const data = await res.json();
+        setWorkerAnalytics(data.workerAnalytics);
+      } 
     } catch (error) {
+      console.log("Analytics fetch error:", error.message);
+      setAlertData({
+        title: "Network error",
+        message: "Unable to connect to the server",
+        type: "error",
+      });
+      setIsAlertVisible(true);
+      hideAlert();
+    } finally {
       setIsLoading(false);
     }
   };
@@ -35,34 +49,48 @@ function Analytics() {
   //handle click on withdraw button
   const handleWithdrawButtonClicked = async () => {
     setIsLoading(true);
-    const userId = await decodeJwtToken()._id;
-    const payload = {
-      workerUserProfileId: userId,
-      amount: workerAnalytics.withdrawAmount,
-    };
-    setIsLoading(true);
     try {
-      fetch(`http://localhost:2000/pay/transfer-funds`, {
+      const userId = decodeJwtToken()._id;
+      const payload = {
+        workerUserProfileId: userId,
+        amount: workerAnalytics.withdrawAmount,
+      };
+
+      const res = await fetch(`http://localhost:2000/pay/transfer-funds`, {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }).then(async (res) => {
-        if (res.status === 200) {
-          setAlertData({
-            title: "Withdraw successfully",
-            message: "Amount Transfer successfully ",
-            type: "success",
-          });
-          setIsAlertVisible(true);
-          hideAlert();
-          setIsLoading(false);
-          //set withdraw amount to 0
-          workerAnalytics.withdrawAmount = 0
-        }
       });
+
+      if (res.status === 200) {
+        setAlertData({
+          title: "Withdraw successful",
+          message: "Amount transferred successfully",
+          type: "success",
+        });
+        setWorkerAnalytics((prev) => ({
+          ...prev,
+          withdrawAmount: 0,
+        }));
+      } else {
+        setAlertData({
+          title: "Withdraw failed",
+          message: "Something went wrong. Try again later.",
+          type: "error",
+        });
+      }
+      setIsAlertVisible(true);
+      hideAlert();
     } catch (error) {
+      console.log("Withdraw error:", error.message);
+      setAlertData({
+        title: "Network error",
+        message: "Unable to process your request",
+        type: "error",
+      });
+      setIsAlertVisible(true);
+      hideAlert();
+    } finally {
       setIsLoading(false);
     }
   };
@@ -78,7 +106,7 @@ function Analytics() {
       <strong className="font-bold text-3xl my-10 container block ml-24 mb-3">
         Analytics
       </strong>
-      {workerAnalytics && workerAnalytics.averageRating ? (
+      {workerAnalytics ? (
         <div className="container mx-auto p-6 border-2 rounded-md mb-4">
           {/* Withdraw Section */}
           <div className="flex justify-between items-center bg-white p-6 mb-8">
@@ -133,7 +161,9 @@ function Analytics() {
             </div>
           </div>
         </div>
-      ): <ActivityIndicator/> }
+      ) : (
+        <ActivityIndicator />
+      )}
     </>
   );
 }

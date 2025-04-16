@@ -17,38 +17,42 @@ function WorkerAppliedJobs() {
     decodeJwtToken,
   } = useContext(StateContext);
   //get all the jobs
-  const getMyAppliedJobs = () => {
-    const userId = decodeJwtToken()._id;
+  const getMyAppliedJobs = async () => {
+    setIsLoading(true);
+  
     try {
-      fetch(`http://localhost:2000/worker//get-worker-applied-jobs/${userId}`).then(
-        async (res) => {
-          //user has posted jobs
-          if (res.status === 200) {
-            const data = await res.json();
-            setMyAppliedJobs(data.appliedJobs);
-          }
-          //server error
-          else {
-            setAlertData({
-              title: "Server error",
-              message: "Something went wrong please try again later",
-              type: "error",
-            });
-
-            setIsAlertVisible(true);
-            hideAlert();
-          }
-          setIsLoading(false);
-        }
-      );
+      const { _id: userId } = await decodeJwtToken();
+      if (!userId) throw new Error("Invalid user ID");
+  
+      const res = await fetch(`http://localhost:2000/worker/get-worker-applied-jobs/${userId}`);
+  
+      if (res.ok) {
+        const data = await res.json();
+        setMyAppliedJobs(data.appliedJobs || []);
+      } else {
+        const errorData = await res.json();
+        setAlertData({
+          title: "Server Error",
+          message: errorData.message || "Something went wrong, please try again later",
+          type: "error",
+        });
+        setIsAlertVisible(true);
+        hideAlert();
+      }
     } catch (error) {
-      console.log("My worker profile error" + error.message);
+      console.error("getMyAppliedJobs error:", error.message);
+      setAlertData({
+        title: "Network Error",
+        message: "Could not connect to the server. Please check your internet connection.",
+        type: "error",
+      });
+      setIsAlertVisible(true);
+      hideAlert();
+    } finally {
       setIsLoading(false);
     }
   };
-
-
-
+  
   useEffect(() => {
     getMyAppliedJobs()
   }, []);
@@ -139,9 +143,9 @@ function WorkerAppliedJobs() {
                 </table>
               </div>
 
-              {myAppliedJobs.length === 0 && (
+              {!isLoading && myAppliedJobs.length === 0 && (
                 <div className="w-full text-center mt-4">
-                  <p className="text-3xl">You have not applied for jobs</p>
+                  <p className="text-3xl">Not applied for any job. Apply now</p>
                 </div>
               )}
             </div>

@@ -17,6 +17,7 @@ function WorkersDetail() {
     setAlertData,
     hideAlert,
     decodeJwtToken,
+    isUserLoggedIn,
   } = useContext(StateContext);
   const navigate = useNavigate();
   const [params] = useSearchParams();
@@ -27,26 +28,29 @@ function WorkersDetail() {
     type: "",
   });
 
-  //function that chect if user is logged in or not
-  const isUserLoggedIn = () => {
-    let isLoggedIn = localStorage.getItem("token");
-    return isLoggedIn === null ? false : true;
-  };
-
   //function that gets the worker details
-  const getWorkerDetails = () => {
+  // Function to get worker details
+  const getWorkerDetails = async () => {
     try {
-      fetch(`http://localhost:2000/worker/get-worker/${idParams}`).then(
-        async (res) => {
-          const data = await res.json();
-          setWorkerDetails(data.worker[0]);
-          setIsLoading(false);
-        }
+      setIsLoading(true); // Show loading indicator
+      const res = await fetch(
+        `http://localhost:2000/worker/get-worker/${idParams}`
       );
-    } catch (error) {}
+      if (res.status === 200) {
+        const data = await res.json();
+        setWorkerDetails(data.worker[0]);
+        console.log(data.worker[0]);
+      } else {
+        console.error("Failed to fetch worker details");
+      }
+    } catch (error) {
+      console.error("Error fetching worker details:", error);
+    } finally {
+      setIsLoading(false); // Hide loading indicator
+    }
   };
 
-  //function to post review message
+  // Function to post review message
   const postReviewMessage = async () => {
     const user = await decodeJwtToken()._id;
 
@@ -55,50 +59,58 @@ function WorkersDetail() {
       reviewedProfileId: idParams,
       reviewMessage,
     };
+
     setIsLoading(true);
     try {
-      fetch(`http://localhost:2000/review/set-review`, {
+      const res = await fetch(`http://localhost:2000/review/set-review`, {
         method: "POST",
         body: JSON.stringify(payload),
         headers: {
           "Content-Type": "application/json",
         },
-      }).then(async (res) => {
-        if (res.status === 200) {
-          const date = new Date();
-          setWorkerReviews((prev) => [
-            ...prev,
-            {
-              reviewMessage,
-              createdAt: date.toDateString(),
-              user: {
-                picture: decodeJwtToken().picture,
-                name: decodeJwtToken().name,
-              },
-            },
-          ]);
-        } else {
-        }
       });
+
+      if (res.status === 200) {
+        const date = new Date();
+        setWorkerReviews((prev) => [
+          ...prev,
+          {
+            reviewMessage,
+            createdAt: date.toDateString(),
+            user: {
+              picture: decodeJwtToken().picture,
+              name: decodeJwtToken().name,
+            },
+          },
+        ]);
+      } else {
+        console.error("Failed to post review");
+      }
     } catch (error) {
+      console.error("Error posting review message:", error);
+    } finally {
       setIsLoading(false);
     }
   };
 
-  //function to get reviews
-  const getWorkerReviews = () => {
+  // Function to get worker reviews
+  const getWorkerReviews = async () => {
     setIsLoading(true);
     try {
-      fetch(`http://localhost:2000/review/get-review/${idParams}`).then(
-        async (res) => {
-          if (res.status === 200) {
-            const data = await res.json();
-            setWorkerReviews(data.data);
-            setIsLoading(false);
-          }
-        }
+      const res = await fetch(
+        `http://localhost:2000/review/get-review/${idParams}`
       );
-    } catch (error) {}
+      if (res.status === 200) {
+        const data = await res.json();
+        setWorkerReviews(data.data);
+      } else {
+        console.error("Failed to fetch reviews");
+      }
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   //function to handle post comments button click
@@ -115,29 +127,33 @@ function WorkersDetail() {
     }
   };
 
-  //handle click on message button 
-  const handleMessageButtonClick = async ()=>{
+  //handle click on message button
+  const handleMessageButtonClick = async () => {
     const userId = await decodeJwtToken()._id;
+  
     const payload = {
       userId,
-      newContact : workerDetails.user._id ,
-      contactAnalytics : workerDetails.workerAnalytics._id
+      newContact: workerDetails.user._id,
+      contactAnalytics: workerDetails.workerAnalytics._id,
     };
+  
     setIsLoading(true);
-    fetch("http://localhost:2000/message/add-user-contact", {
-      method: "POST",
-      body: JSON.stringify(payload),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).then(async(res)=>{
-      const data = await res.json()
-      console.log(data)
-      if(data.success){
-
-        navigate('/message')
-      }  
-      else{
+  
+    try {
+      const res = await fetch("http://localhost:2000/message/add-user-contact", {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  
+      const data = await res.json();
+      console.log(data);
+  
+      if (data.success) {
+        navigate("/message");
+      } else {
         setAlertData({
           title: "Error",
           message: "Something went wrong, try again",
@@ -146,12 +162,40 @@ function WorkersDetail() {
         setIsAlertVisible(true);
         hideAlert();
       }
-    })
-  }
+    } catch (error) {
+      console.error("Error adding user contact:", error);
+      setAlertData({
+        title: "Error",
+        message: "An error occurred, please try again later.",
+        type: "error",
+      });
+      setIsAlertVisible(true);
+      hideAlert();
+    } finally {
+      setIsLoading(false); // Ensure loading state is turned off
+    }
+  };
   
+  //time ago change time to time ago
+  function timeAgo(date) {
+    const now = new Date();
+    const past = new Date(date);
+    const diffMs = now - past;
+    const diffSec = Math.floor(diffMs / 1000);
+    const diffMin = Math.floor(diffSec / 60);
+    const diffHr = Math.floor(diffMin / 60);
+    const diffDay = Math.floor(diffHr / 24);
+  
+    if (diffSec < 60) return 'Just now';
+    if (diffMin < 60) return `${diffMin} minute(s) ago`;
+    if (diffHr < 24) return `${diffHr} hour(s) ago`;
+    if (diffDay < 2) return 'Yesterday';
+    return `${diffDay} day(s) ago`;
+  }
+
   useEffect(() => {
     if (isUserLoggedIn()) {
-      setUserDetails(decodeJwtToken()); 
+      setUserDetails(decodeJwtToken());
     }
     getWorkerDetails();
     getWorkerReviews();
@@ -191,7 +235,7 @@ function WorkersDetail() {
                     <p className="text-gray-700">{workerDetails.user.name}</p>
                     <p className="text-xs">
                       Last active :{" "}
-                      {workerDetails.workerAnalytics.lastActive || "Not Known"}
+                      {timeAgo(workerDetails.workerAnalytics.lastActive) || "Not Known"}
                     </p>
                   </div>
                 </div>
@@ -217,8 +261,9 @@ function WorkersDetail() {
                     />
                   </svg>
                   <span className="ml-2 text-gray-600">
-                    {workerDetails.workerAnalytics.averageRating.toString().slice(0,3) || 0} (
-                    {workerReviews.length} Review)
+                    {workerDetails.workerAnalytics.averageRating
+                      .toFixed()}
+                    ({workerReviews.length} Review)
                   </span>
                   <span className="font-bold text-xl ml-2">.</span>
                   <span className="ml-2 text-gray-600">
@@ -231,30 +276,29 @@ function WorkersDetail() {
                 </p>
                 {isUserLoggedIn() && userDetails.type === "postWork" ? (
                   <>
-                  <button
-                    onClick={() => {
-                      const params = new URLSearchParams();
-                      params.append("pid", idParams);
-                      params.append("tagline", workerDetails.workerTagline);
-                      params.append("wid", workerDetails.user._id);
-                      params.append("uid", userDetails._id);
+                    <button
+                      onClick={() => {
+                        const params = new URLSearchParams();
+                        params.append("pid", idParams);
+                        params.append("tagline", workerDetails.workerTagline);
+                        params.append("wid", workerDetails.user._id);
+                        params.append("uid", userDetails._id);
 
-                      navigate(`/hire-worker?${params.toString()}`);
-                    }}
-                    type="button"
-                    className="text-white bg-black font-medium rounded-lg px-5 py-2.5 me-2"
-                  >
-                    Hire now
-                  </button>
-                  <button
-                    onClick={handleMessageButtonClick}
-                    type="button"
-                    className="text-black bg-brandcolor  font-medium rounded-lg px-5 py-2.5 me-2"
-                  >
-                    Message
-                  </button>
+                        navigate(`/hire-worker?${params.toString()}`);
+                      }}
+                      type="button"
+                      className="text-white bg-black font-medium rounded-lg px-5 py-2.5 me-2"
+                    >
+                      Hire now
+                    </button>
+                    <button
+                      onClick={handleMessageButtonClick}
+                      type="button"
+                      className="text-black bg-brandcolor  font-medium rounded-lg px-5 py-2.5 me-2"
+                    >
+                      Message
+                    </button>
                   </>
-
                 ) : (
                   <p>
                     <span className="font-bold">Note:</span> Only post work
@@ -285,7 +329,7 @@ function WorkersDetail() {
                             {review.user.name}
                           </h5>
                           <h6 className="text-gray-500 text-xs font-normal leading-5">
-                            {review.createdAt}
+                            {timeAgo(review.createdAt)}
                           </h6>
                         </div>
                       </div>

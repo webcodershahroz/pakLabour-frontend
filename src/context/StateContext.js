@@ -53,68 +53,48 @@ export function StateContextProvider({ children }) {
     return tempOtp;
   };
 
-  //send email of otp to email
-  const sendEmail = async (email) => {
-    setIsLoading(true);
-    let generatedOtp = generateOtp();
-    const payload = {
-      otp: generatedOtp,
-      email,
-    };
-    console.log(payload);
-    fetch("http://localhost:2000/auth/send-otp", {
+// Send email OTP to email
+const sendEmail = async (email) => {
+  setIsLoading(true);
+  const generatedOtp = generateOtp();
+  const payload = { otp: generatedOtp, email };
+
+  try {
+    const res = await fetch("http://localhost:2000/auth/send-otp", {
       method: "POST",
       body: JSON.stringify(payload),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => {
-        //show alert when otp is sent
-        if (res.status === 200) {
-          setAlertData({
-            title: "Otp send",
-            message: "OTP is sent to " + email + "check your email",
-            type: "success",
-          });
+      headers: { "Content-Type": "application/json" },
+    });
 
-          setIsAlertVisible(true);
-          hideAlert();
-        }
-        //server error
-        else if (res.status === 500) {
-          setAlertData({
-            title: "google error",
-            message: "Something went wrong please try again later",
-            type: "error",
-          });
-
-          setIsAlertVisible(true);
-          hideAlert();
-        } else {
-          setAlertData({
-            title: "Server error",
-            message: "Something went wrong please try again later",
-            type: "error",
-          });
-
-          setIsAlertVisible(true);
-          hideAlert();
-        }
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        setAlertData({
-          title: "Internet Error",
-          message: "Check Your internet and try again",
-          type: "error",
-        });
-
-        setIsAlertVisible(true);
-        hideAlert();
-        setIsLoading(false);
+    if (res.status === 200) {
+      setAlertData({
+        title: "OTP Sent",
+        message: `OTP has been sent to ${email}. Please check your email.`,
+        type: "success",
       });
-  };
+    } else {
+      const errorMessage = res.status === 500
+        ? "Server error. Please try again later."
+        : "Something went wrong. Please try again later.";
+      setAlertData({
+        title: "Error",
+        message: errorMessage,
+        type: "error",
+      });
+    }
+  } catch (err) {
+    setAlertData({
+      title: "Internet Error",
+      message: "Please check your internet connection and try again.",
+      type: "error",
+    });
+  } finally {
+    setIsAlertVisible(true);
+    hideAlert();
+    setIsLoading(false);
+  }
+};
+
 
   //logout funtion
   const logout = () => {
@@ -167,7 +147,6 @@ export function StateContextProvider({ children }) {
         logout,
         isUserLoggedIn,
         updateWorkerAnalytics,
-        workerAnalytics
       }}
     >
       {children}
