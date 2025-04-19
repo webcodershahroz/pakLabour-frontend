@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ActivityIndicator from "../utils/ActivityIndicator";
 
-function Workers({ data }) {
+function Workers(props) {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    setIsLoading(data.isLoading);
-  }, [data.isLoading]);
+    setIsLoading(props.data.isLoading);
+  }, [props.data.isLoading]);
 
   const handleNavigate = (worker) => {
     const params = new URLSearchParams({
@@ -24,7 +24,7 @@ function Workers({ data }) {
         <ActivityIndicator />
       ) : (
         <div className="container mx-auto mb-10 flex gap-4 flex-wrap justify-center">
-          {data.searchResultWorkers.map((worker) => (
+          {Array.isArray(props.data.searchResultWorkers) && props.data.searchResultWorkers.map((worker) => (
             <button
               key={worker._id}
               onClick={() => handleNavigate(worker)}
@@ -67,12 +67,12 @@ function Workers({ data }) {
               <p className="text-justify p-2">{worker.workerTagline}</p>
             </button>
           ))}
-          {data.searchResultWorkers.length === 0 && (
+          {props.data.searchResultWorkers.length === 0 && (
             <div className="w-full text-center mt-8">
               <p className="text-3xl">
-                {data.location
-                  ? `No workers found in ${data.location}`
-                  : `No worker found for "${data.query}"`}
+                {props.data.location
+                  ? `No workers found in ${props.data.location}`
+                  : `No worker found for "${props.data.query}"`}
               </p>
             </div>
           )}

@@ -20,7 +20,7 @@ function Jobs(props) {
       ) : (
         <div className="container mx-auto mb-10">
           <div className="w-full flex flex-wrap gap-y-2 gap-x-3 sm:mx-2">
-            {props.data.searchResultJobs.map((job) => {
+            {Array.isArray(props.data.searchResultJobs) && props.data.searchResultJobs.map((job) => {
               return (
                 <>
                   <button

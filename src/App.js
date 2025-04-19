@@ -36,9 +36,14 @@ import WorkerAppliedJobs from "./components/workersScreen/WorkerAppliedJobs";
 import Analytics from "./components/workersScreen/Analytics";
 
 // Load Stripe using your public key
-const stripePromise = loadStripe(
-  "pk_test_51R7Jv3PIp1oj547x1KUltWooU6EFlYoRvl5sQ0Ktm9Q8Q8JfKr4iPM8gFXipmNwjSTGoLnzlrZKL087H9BqwR7Zl00mV18mCUT"
-);
+try {
+  var stripePromise = loadStripe(
+    "pk_test_51R7Jv3PIp1oj547x1KUltWooU6EFlYoRvl5sQ0Ktm9Q8Q8JfKr4iPM8gFXipmNwjSTGoLnzlrZKL087H9BqwR7Zl00mV18mCUT"
+  );
+} catch (error) {
+  
+}
+
 //function that chect if user is logged in or not
 const isUserLoggedIn = () => {
   let isLoggedIn = localStorage.getItem("token");

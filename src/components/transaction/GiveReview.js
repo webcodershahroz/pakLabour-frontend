@@ -21,10 +21,9 @@ function GiveReview() {
 
   const handleDoneButtonClicked = async () => {
     console.log("clicked");
-    // setIsLoading(true);
+    setIsLoading(true);
     if (ratings.match("[0-4]{1}.[0-9]{1}") && review.length > 0) {
       await updateRatings();
-      setIsLoading(false);
 
     } else {
       setAlertData({
@@ -86,7 +85,7 @@ function GiveReview() {
       if (res.ok) {
         // await deleteJob(stateData.jobId);
       window.location.href = "/my-orders";
-
+      setIsLoading(false)
       } else {
         console.error("Failed to update order status.");
       }

@@ -71,7 +71,14 @@ function MakeTransaction() {
           hideAlert();
           navigate("/give-review", { state: stateData }); // Redirect after success
         } else {
-          throw new Error(data.message || "Transaction failed");
+          setAlertData({
+            title: "Transaction Faied",
+            message: data.message,
+            type: "error",
+          });
+          setIsAlertVisible(true);
+          hideAlert();
+          setIsLoading(false);
         }
       });
     } catch (error) {
@@ -102,7 +109,7 @@ function MakeTransaction() {
                 <div className="w-1/2">
                   <div className="mb-3">
                     <h1 className="text-xl font-bold md:text-2xl ">
-                      Payment through Stripe
+                      Payment through Card
                     </h1>
                     <p className="text-sm font-normal">Enter phone number</p>
                   </div>
