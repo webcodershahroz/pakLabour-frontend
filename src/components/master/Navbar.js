@@ -36,10 +36,10 @@ function Navbar() {
   return (
     <>
       {!location.pathname.includes("/auth/") && (
-        <nav className="h-20 w-full border-b border-gray flex items-center px-5 justify-between">
+        <nav className="h-fit w-full border-b border-gray flex items-center px-5 justify-between flex-wrap">
           <div className="flex items-center justify-between">
             <Link to="/">
-              <img src={logo} height={70} width={82} alt="" />
+              <img src={logo} className="h-[70px] w-[82px]"alt="" />
             </Link>
             <Link
               to="/"
@@ -178,7 +178,7 @@ function Navbar() {
 
           <div
             className={`w-6/12 flex relative items-center ${
-              location.pathname === "/" ? "invisible" : ""
+              location.pathname === "/" ? "hidden" : ""
             }`}
           >
             <input

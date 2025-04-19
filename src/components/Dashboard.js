@@ -53,9 +53,9 @@ function Dashboard() {
         <h1 className="text-4xl font-bold text-white tracking-wide">
           Welcome, {userDetails.name}
         </h1>
-        <div className="w-full flex items-center justify-center absolute -bottom-9">
+        <div className="w-full flex items-center justify-center absolute -bottom-10">
           {userDetails.type === "postWork" ? (
-            <div className="flex justify-evenly items-center w-[50%] bg-white drop-shadow-xl rounded py-5 ">
+            <div className="flex justify-evenly items-center w-[50%] bg-white drop-shadow-xl rounded py-5 flex-wrap">
               <p className="text-2xl font-medium">Post your job here</p>
               <Link
                 to={"/post-job"}
@@ -65,7 +65,7 @@ function Dashboard() {
               </Link>
             </div>
           ) : (
-            <div className="flex justify-evenly items-center w-[50%] bg-white drop-shadow-xl rounded py-5 ">
+            <div className="flex justify-evenly items-center w-[50%] bg-white drop-shadow-xl rounded py-5 flex-wrap">
               <p className="text-2xl font-medium">Create a worker profile</p>
               <Link
                 to={"/create-worker-profile"}
