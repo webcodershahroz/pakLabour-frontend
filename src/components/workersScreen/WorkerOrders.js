@@ -24,7 +24,7 @@ function WorkerOrders() {
     const userId = decodeJwtToken()._id;
   
     try {
-      const res = await fetch(`http://localhost:2000/worker/get-worker-orders/${userId}`);
+      const res = await fetch(`https://paklabour-backend.vercel.app/worker/get-worker-orders/${userId}`);
   
       if (res.status === 200) {
         const data = await res.json();
@@ -58,7 +58,7 @@ function WorkerOrders() {
     const userId = decodeJwtToken()._id;
   
     try {
-      const res = await fetch(`http://localhost:2000/worker/get-postwork-orders/${userId}`);
+      const res = await fetch(`https://paklabour-backend.vercel.app/worker/get-postwork-orders/${userId}`);
   
       if (res.status === 200) {
         const data = await res.json();
@@ -173,7 +173,7 @@ function WorkerOrders() {
                           >
                             <td className="px-6 py-4 font-normal underline">
                               <img
-                                src={`http://localhost:2000/${order.pid.workerPicture}`}
+                                src={`https://paklabour-backend.vercel.app/${order.pid.workerPicture}`}
                                 alt="P"
                                 height={50}
                                 width={50}
@@ -182,7 +182,7 @@ function WorkerOrders() {
                             {decodeJwtToken().type === "postWork" ? (
                               <td className="px-6 py-4 flex items-center gap-1">
                                 <img
-                                  src={`http://localhost:2000/${order.wid.picture}`}
+                                  src={`https://paklabour-backend.vercel.app/${order.wid.picture}`}
                                   className="rounded-full"
                                   alt="P"
                                   height={25}
@@ -193,7 +193,7 @@ function WorkerOrders() {
                             ) : (
                               <td className="px-6 py-4 flex items-center gap-1">
                                 <img
-                                  src={`http://localhost:2000/${order.uid.picture}`}
+                                  src={`https://paklabour-backend.vercel.app/${order.uid.picture}`}
                                   className="rounded-full"
                                   alt="P"
                                   height={25}

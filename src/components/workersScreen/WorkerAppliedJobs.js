@@ -24,7 +24,7 @@ function WorkerAppliedJobs() {
       const { _id: userId } = await decodeJwtToken();
       if (!userId) throw new Error("Invalid user ID");
   
-      const res = await fetch(`http://localhost:2000/worker/get-worker-applied-jobs/${userId}`);
+      const res = await fetch(`https://paklabour-backend.vercel.app/worker/get-worker-applied-jobs/${userId}`);
   
       if (res.ok) {
         const data = await res.json();

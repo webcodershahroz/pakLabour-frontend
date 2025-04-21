@@ -63,33 +63,46 @@ function SearchResults() {
     navigate(`/search?${params.toString()}`);
   };
 
-  const getWorkers = async () => {
+  const getJobs = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch(`http://localhost:2000/worker/get-workers?query=${query}`);
+      const res = await fetch(`https://paklabour-backend.vercel.app/job/get-job?query=${query}`);
       const data = await res.json();
-      setSearchResultWorkers(data);
-      setPreviousWorkerState(data);
+      if (Array.isArray(data)) {
+        setSearchResultJobs(data);
+        setPreviousJobState(data);
+      } else {
+        setSearchResultJobs([]);
+        setPreviousJobState([]);
+      }
     } catch (error) {
-      console.error("Error fetching workers:", error);
+      console.error("Error fetching jobs:", error);
+      setSearchResultJobs([]);
     } finally {
       setIsLoading(false);
     }
   };
   
-  const getJobs = async () => {
+  const getWorkers = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch(`http://localhost:2000/job/get-job?query=${query}`);
+      const res = await fetch(`https://paklabour-backend.vercel.app/worker/get-workers?query=${query}`);
       const data = await res.json();
-      setSearchResultJobs(data);
-      setPreviousJobState(data);
+      if (Array.isArray(data)) {
+        setSearchResultWorkers(data);
+        setPreviousWorkerState(data);
+      } else {
+        setSearchResultWorkers([]);
+        setPreviousWorkerState([]);
+      }
     } catch (error) {
-      console.error("Error fetching jobs:", error);
+      console.error("Error fetching workers:", error);
+      setSearchResultWorkers([]);
     } finally {
       setIsLoading(false);
     }
   };
+  
   
 
   useEffect(() => {

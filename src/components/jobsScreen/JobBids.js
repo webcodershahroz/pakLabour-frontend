@@ -14,7 +14,7 @@ function JobBids() {
   const getJobBids = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch(`http://localhost:2000/apply/get-job-bids/${idParam}`);
+      const res = await fetch(`https://paklabour-backend.vercel.app/apply/get-job-bids/${idParam}`);
       
       if (res.status === 200) {
         const data = await res.json();
@@ -56,7 +56,7 @@ function JobBids() {
                 >
                   <div className="flex gap-3">
                     <img
-                      src={`http://localhost:2000/${bid.user.picture}`}
+                      src={`https://paklabour-backend.vercel.app/${bid.user.picture}`}
                       height={100}
                       width={100}
                       alt=""

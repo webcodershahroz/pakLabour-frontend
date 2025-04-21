@@ -63,7 +63,7 @@ function PostJob() {
     setIsLoading(true);
 
     try {
-      const res = await fetch("http://localhost:2000/job/post-job", {
+      const res = await fetch("https://paklabour-backend.vercel.app/job/post-job", {
         method: "POST",
         body: formData,
       });

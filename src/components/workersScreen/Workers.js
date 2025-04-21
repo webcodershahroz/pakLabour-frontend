@@ -32,12 +32,12 @@ function Workers(props) {
             >
               <div className="relative w-full">
                 <img
-                  src={`http://localhost:2000/${worker.workerPicture}`}
+                  src={`https://paklabour-backend.vercel.app/${worker.workerPicture}`}
                   alt="Worker cover"
                   className="h-52 w-full border-b border-stone-400 object-cover"
                 />
                 <img
-                  src={`http://localhost:2000/${worker.user.picture}`}
+                  src={`https://paklabour-backend.vercel.app/${worker.user.picture}`}
                   alt="User profile"
                   className="h-20 w-20 rounded-full absolute right-[36%] -bottom-10 object-cover"
                 />

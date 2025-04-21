@@ -34,7 +34,7 @@ function WorkersDetail() {
     try {
       setIsLoading(true); // Show loading indicator
       const res = await fetch(
-        `http://localhost:2000/worker/get-worker/${idParams}`
+        `https://paklabour-backend.vercel.app/worker/get-worker/${idParams}`
       );
       if (res.status === 200) {
         const data = await res.json();
@@ -62,7 +62,7 @@ function WorkersDetail() {
 
     setIsLoading(true);
     try {
-      const res = await fetch(`http://localhost:2000/review/set-review`, {
+      const res = await fetch(`https://paklabour-backend.vercel.app/review/set-review`, {
         method: "POST",
         body: JSON.stringify(payload),
         headers: {
@@ -98,7 +98,7 @@ function WorkersDetail() {
     setIsLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:2000/review/get-review/${idParams}`
+        `https://paklabour-backend.vercel.app/review/get-review/${idParams}`
       );
       if (res.status === 200) {
         const data = await res.json();
@@ -140,7 +140,7 @@ function WorkersDetail() {
     setIsLoading(true);
   
     try {
-      const res = await fetch("http://localhost:2000/message/add-user-contact", {
+      const res = await fetch("https://paklabour-backend.vercel.app/message/add-user-contact", {
         method: "POST",
         body: JSON.stringify(payload),
         headers: {
@@ -214,7 +214,7 @@ function WorkersDetail() {
             <div className="flex flex-wrap -mx-4">
               <div className="w-full md:w-1/2 px-4 mb-8">
                 <img
-                  src={`http://localhost:2000/${workerDetails.workerPicture}`}
+                  src={`https://paklabour-backend.vercel.app/${workerDetails.workerPicture}`}
                   alt="Product"
                   className="w-full h-auto rounded-lg shadow-md mb-4"
                   id="mainImage"
@@ -227,7 +227,7 @@ function WorkersDetail() {
                 </h2>
                 <div className="flex mb-4 items-center gap-2">
                   <img
-                    src={`http://localhost:2000/${workerDetails.user.picture}`}
+                    src={`https://paklabour-backend.vercel.app/${workerDetails.user.picture}`}
                     alt="User Avatar"
                     className="w-10 h-10 rounded-full"
                   />
@@ -320,7 +320,7 @@ function WorkersDetail() {
                         <div className="w-10 h-10 bg-gray-300 rounded-full justify-start items-start gap-2.5 flex">
                           <img
                             className="rounded-full object-cover"
-                            src={`http://localhost:2000/${review.user.picture}`}
+                            src={`https://paklabour-backend.vercel.app/${review.user.picture}`}
                             alt="UP"
                           />
                         </div>

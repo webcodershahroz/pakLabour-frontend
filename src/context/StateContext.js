@@ -60,7 +60,7 @@ const sendEmail = async (email) => {
   const payload = { otp: generatedOtp, email };
 
   try {
-    const res = await fetch("http://localhost:2000/auth/send-otp", {
+    const res = await fetch("https://paklabour-backend.vercel.app/auth/send-otp", {
       method: "POST",
       body: JSON.stringify(payload),
       headers: { "Content-Type": "application/json" },
@@ -113,7 +113,7 @@ const sendEmail = async (email) => {
     }
     console.log(payload)
     try {
-      fetch(`http://localhost:2000/worker/update-analytics`, {
+      fetch(`https://paklabour-backend.vercel.app/worker/update-analytics`, {
         method: "POST",
         body: JSON.stringify(payload),
         headers: {

@@ -22,7 +22,7 @@ function MyJobs() {
     const userId = decodeJwtToken()._id;
   
     try {
-      const res = await fetch(`http://localhost:2000/job/get-user-job/${userId}`);
+      const res = await fetch(`https://paklabour-backend.vercel.app/job/get-user-job/${userId}`);
   
       if (res.status === 200) {
         const data = await res.json();
@@ -55,7 +55,7 @@ function MyJobs() {
   // //delete job using _id
   // const deleteJob = (_id) => {
   //   try {
-  //     fetch(`http://localhost:2000/job/delete-job/${_id}`, {
+  //     fetch(`https://paklabour-backend.vercel.app/job/delete-job/${_id}`, {
   //       method: "DELETE",
   //     }).then(async (res) => {
   //       //user has posted jobs

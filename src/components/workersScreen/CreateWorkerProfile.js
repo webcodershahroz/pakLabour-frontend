@@ -60,7 +60,7 @@ function CreateWorkerProfile() {
   
       if (pictureUrl) formData.append("picture", pictureUrl);
   
-      const res = await fetch("http://localhost:2000/worker/create-worker-profile", {
+      const res = await fetch("https://paklabour-backend.vercel.app/worker/create-worker-profile", {
         method: "POST",
         body: formData,
       });

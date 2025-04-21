@@ -17,7 +17,7 @@ function Message() {
   const getUserContacts = async () => {
     try {
       const userId = await decodeJwtToken()._id;
-      const res = await fetch(`http://localhost:2000/message/get-user-contacts/${userId}`);
+      const res = await fetch(`https://paklabour-backend.vercel.app/message/get-user-contacts/${userId}`);
       
       if (res.status === 200) {
         const data = await res.json();
@@ -35,7 +35,7 @@ function Message() {
   const getUserMessages = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch(`http://localhost:2000/message/get-messages/${selectedChat.conId}`);
+      const res = await fetch(`https://paklabour-backend.vercel.app/message/get-messages/${selectedChat.conId}`);
       
       if (res.status === 200) {
         const data = await res.json();
@@ -106,7 +106,7 @@ function Message() {
     console.log("Sending message payload:", payload);
 
     // Send the message to the server
-    const res = await fetch("http://localhost:2000/message/save-messages", {
+    const res = await fetch("https://paklabour-backend.vercel.app/message/save-messages", {
       method: "POST",
       body: JSON.stringify(payload),
       headers: {
@@ -177,7 +177,7 @@ function Message() {
                     >
                       <div className="w-12 h-12 bg-gray-300 rounded-full mr-3">
                         <img
-                          src={`http://localhost:2000/${contact.contact.picture}`}
+                          src={`https://paklabour-backend.vercel.app/${contact.contact.picture}`}
                           alt="User Avatar"
                           className="w-12 h-12 rounded-full"
                         />
@@ -199,7 +199,7 @@ function Message() {
             <>
               <header className="bg-white p-4 text-gray-700 border-b drop-shadow-sm flex items-center gap-2">
                 <img
-                  src={`http://localhost:2000/${selectedChat.reciverPicture}`}
+                  src={`https://paklabour-backend.vercel.app/${selectedChat.reciverPicture}`}
                   alt="User Avatar"
                   className="w-12 h-12 rounded-full"
                 />
@@ -226,7 +226,7 @@ function Message() {
                         </div>
                         <div className="rounded-full ml-2">
                           <img
-                            src={`http://localhost:2000/${message.sender.picture}`}
+                            src={`https://paklabour-backend.vercel.app/${message.sender.picture}`}
                             alt="My Avatar"
                             className="w-6 h-6 rounded-full"
                           />
@@ -236,7 +236,7 @@ function Message() {
                       <div className="flex mb-2">
                         <div className="rounded-full ml-2">
                           <img
-                            src={`http://localhost:2000/${message.sender.picture}`}
+                            src={`https://paklabour-backend.vercel.app/${message.sender.picture}`}
                             alt="User Avatar"
                             className="w-6 h-6 rounded-full"
                           />

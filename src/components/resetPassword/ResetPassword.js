@@ -57,7 +57,7 @@ function ResetPassword() {
     setIsLoading(true);
   
     try {
-      const res = await fetch("http://localhost:2000/auth/change-password", {
+      const res = await fetch("https://paklabour-backend.vercel.app/auth/change-password", {
         method: "POST",
         body: JSON.stringify(payload),
         headers: {

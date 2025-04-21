@@ -47,7 +47,7 @@ function ApplyNowScreen() {
         jobPrice: applyNowData.price,
       };
   
-      const res = await fetch("http://localhost:2000/apply/apply-now", {
+      const res = await fetch("https://paklabour-backend.vercel.app/apply/apply-now", {
         method: "POST",
         body: JSON.stringify(payload),
         headers: {

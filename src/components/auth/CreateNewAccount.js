@@ -28,7 +28,7 @@ function CreateNewAccount() {
     setIsLoading(true);
   
     try {
-      const res = await fetch("http://localhost:2000/auth/user-exists", {
+      const res = await fetch("https://paklabour-backend.vercel.app/auth/user-exists", {
         method: "POST",
         body: JSON.stringify(payload),
         headers: {

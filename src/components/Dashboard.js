@@ -16,7 +16,7 @@ function Dashboard() {
       const userId = await decodeJwtToken()._id; // Decode user ID from JWT token
       const payload = { user: userId };
   
-      const res = await fetch("http://localhost:2000/review/update-lastActive", {
+      const res = await fetch("https://paklabour-backend.vercel.app/review/update-lastActive", {
         method: "POST",
         body: JSON.stringify(payload),
         headers: {

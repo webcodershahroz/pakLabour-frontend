@@ -225,7 +225,7 @@ function Navbar() {
                   >
                     <img
                       className="rounded-full p-1"
-                      src={`http://localhost:2000/${decodeJwtToken().picture}`}
+                      src={`https://paklabour-backend.vercel.app/${decodeJwtToken().picture}`}
                       alt="P"
                     />
                   </button>

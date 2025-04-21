@@ -34,7 +34,7 @@ function JobsDetail() {
   const getJobDetails = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch(`http://localhost:2000/job/get-job/${idParam}`);
+      const res = await fetch(`https://paklabour-backend.vercel.app/job/get-job/${idParam}`);
   
       if (res.status === 200) {
         const data = await res.json();
@@ -135,7 +135,7 @@ function JobsDetail() {
                               data-carousel-item
                             >
                               <img
-                                src={`http://localhost:2000/${jobDetails.pictures[photoCarousalIndex]}`}
+                                src={`https://paklabour-backend.vercel.app/${jobDetails.pictures[photoCarousalIndex]}`}
                                 className="object-contain h-full absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
                                 alt="..."
                               />
@@ -202,7 +202,7 @@ function JobsDetail() {
                     <div className="flex mb-4 gap-2 flex-col">
                       <div className="flex items-center">
                         <img
-                          src={`http://localhost:2000/${jobDetails.user.picture}`}
+                          src={`https://paklabour-backend.vercel.app/${jobDetails.user.picture}`}
                           alt="User Avatar"
                           className="w-8 h-8 rounded-full"
                         />

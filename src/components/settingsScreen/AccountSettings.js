@@ -30,7 +30,7 @@ function ProfileSettings() {
   
       console.log("Uploading picture:", pictureUrl);
   
-      const res = await fetch("http://localhost:2000/auth/upload-picture", {
+      const res = await fetch("https://paklabour-backend.vercel.app/auth/upload-picture", {
         method: "POST",
         body: formData,
       });
@@ -108,7 +108,7 @@ function ProfileSettings() {
                 src={
                   isUpdating
                     ? previewUrl
-                    : `http://localhost:2000/${userDetails.picture}`
+                    : `https://paklabour-backend.vercel.app/${userDetails.picture}`
                 }
                 alt=""
               />

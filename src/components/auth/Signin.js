@@ -23,7 +23,7 @@ function Signin() {
     setIsLoading(true);
 
     try {
-      const res = await fetch("http://localhost:2000/auth/login", {
+      const res = await fetch("https://paklabour-backend.vercel.app/auth/login", {
         method: "POST",
         body: JSON.stringify(payload),
         headers: { "Content-Type": "application/json" },

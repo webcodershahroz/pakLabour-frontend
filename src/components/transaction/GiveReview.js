@@ -47,7 +47,7 @@ function GiveReview() {
     };
 
     try {
-      const res = await fetch(`http://localhost:2000/review/set-review`, {
+      const res = await fetch(`https://paklabour-backend.vercel.app/review/set-review`, {
         method: "POST",
         body: JSON.stringify(payload),
         headers: {
@@ -72,7 +72,7 @@ function GiveReview() {
 
     try {
       const res = await fetch(
-        `http://localhost:2000/hire/update-order-status`,
+        `https://paklabour-backend.vercel.app/hire/update-order-status`,
         {
           method: "POST",
           body: JSON.stringify(payload),
@@ -104,7 +104,7 @@ function GiveReview() {
     console.log("Updating ratings with:", payload);
 
     try {
-      const res = await fetch(`http://localhost:2000/review/update-analytics`, {
+      const res = await fetch(`https://paklabour-backend.vercel.app/review/update-analytics`, {
         method: "POST",
         body: JSON.stringify(payload),
         headers: {
@@ -124,7 +124,7 @@ function GiveReview() {
 
   // const deleteJob = async (_id) => {
   //   try {
-  //     const res = await fetch(`http://localhost:2000/job/delete-job/${_id}`, {
+  //     const res = await fetch(`https://paklabour-backend.vercel.app/job/delete-job/${_id}`, {
   //       method: "DELETE",
   //     });
 

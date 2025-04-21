@@ -26,7 +26,7 @@ function WorkerProfiles() {
 
     try {
       const res = await fetch(
-        `http://localhost:2000/worker/get-worker-profiles/${userId}`
+        `https://paklabour-backend.vercel.app/worker/get-worker-profiles/${userId}`
       );
 
       if (res.status === 200) {
@@ -65,7 +65,7 @@ function WorkerProfiles() {
 
     try {
       const res = await fetch(
-        `http://localhost:2000/worker/get-worker-applied-jobs/${userId}`
+        `https://paklabour-backend.vercel.app/worker/get-worker-applied-jobs/${userId}`
       );
 
       if (res.status === 200) {
@@ -173,7 +173,7 @@ function WorkerProfiles() {
                               className="px-6 py-4 font-normal underline flex items-center gap-1"
                             >
                               <img
-                                src={`http://localhost:2000/${profile.workerPicture}`}
+                                src={`https://paklabour-backend.vercel.app/${profile.workerPicture}`}
                                 alt="P"
                                 height={50}
                                 width={50}

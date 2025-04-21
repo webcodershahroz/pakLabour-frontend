@@ -53,7 +53,7 @@ function MakeTransaction() {
         workerUserProfileId : stateData.wid._id
       };
 
-      fetch("http://localhost:2000/pay/transaction", {
+      fetch("https://paklabour-backend.vercel.app/pay/transaction", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -177,7 +177,7 @@ function MakeTransaction() {
                       <img
                         height={20}
                         width={20}
-                        src={`http://localhost:2000/${stateData.wid?.picture}`}
+                        src={`https://paklabour-backend.vercel.app/${stateData.wid?.picture}`}
                         alt="Worker"
                       />
                       <p>{stateData.wid?.name}</p>

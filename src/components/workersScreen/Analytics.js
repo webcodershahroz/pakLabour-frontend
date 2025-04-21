@@ -25,7 +25,7 @@ function Analytics() {
     try {
       const userId = decodeJwtToken()._id;
       const res = await fetch(
-        `http://localhost:2000/review/get-worker-analytics/${userId}`
+        `https://paklabour-backend.vercel.app/review/get-worker-analytics/${userId}`
       );
 
       if (res.status === 200) {
@@ -56,7 +56,7 @@ function Analytics() {
         amount: workerAnalytics.withdrawAmount,
       };
 
-      const res = await fetch(`http://localhost:2000/pay/transfer-funds`, {
+      const res = await fetch(`https://paklabour-backend.vercel.app/pay/transfer-funds`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

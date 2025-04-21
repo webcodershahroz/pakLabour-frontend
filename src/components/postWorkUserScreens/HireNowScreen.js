@@ -46,7 +46,7 @@ function HireNowScreen() {
     setIsLoading(true); // Show loading spinner while fetching jobs
     try {
       const res = await fetch(
-        `http://localhost:2000/job/get-user-job/${uidParam}`
+        `https://paklabour-backend.vercel.app/job/get-user-job/${uidParam}`
       );
 
       if (res.status === 200) {
@@ -95,7 +95,7 @@ function HireNowScreen() {
     };
 
     try {
-      const res = await fetch("http://localhost:2000/hire/hire-now", {
+      const res = await fetch("https://paklabour-backend.vercel.app/hire/hire-now", {
         method: "POST",
         body: JSON.stringify(payload),
         headers: {
@@ -176,7 +176,7 @@ function HireNowScreen() {
   //delete job using _id
   const deleteJob = async (_id) => {
     try {
-      fetch(`http://localhost:2000/job/delete-job/${_id}`, {
+      fetch(`https://paklabour-backend.vercel.app/job/delete-job/${_id}`, {
         method: "DELETE",
       }).then(async (res) => {
         //user has posted jobs
